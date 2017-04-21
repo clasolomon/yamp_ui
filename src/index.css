@@ -1,0 +1,27 @@
+body {
+    margin: 0;
+    padding: 10px;
+    font-family: sans-serif;
+    background-color: lightblue;
+}
+
+.mi-deleteButton {
+    margin-top: 20%;
+}
+
+.headerLoginButton {
+    margin-left: 30%;
+}
+
+.headerRegisterButton {
+    margin-left: 5%;
+}
+
+.meetingSetup {
+    width: 700px;
+}
+
+.mdt-dateTimePicker {
+    margin-bottom: 10px;
+}
+
