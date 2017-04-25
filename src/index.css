@@ -5,6 +5,12 @@ body {
     background-color: lightblue;
 }
 
+.footer{
+    position: fixed;
+    bottom: 0;
+    text-align: center;
+}
+
 .mi-deleteButton {
     margin-top: 20%;
 }

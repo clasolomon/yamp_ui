@@ -1,25 +1,34 @@
 import React, { Component } from 'react';
+import { Button, Grid, Row, Col } from 'react-bootstrap';
 import MeetingDatesAndTimes from './MeetingDatesAndTimes';
 import MeetingDescription from './MeetingDescription';
 import MeetingInvitations from './MeetingInvitations';
-import { Button, Grid, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 
+/*
+ * MeetingSetup component renders three other components corresponding to the phase of the meeting setup process:
+ * 1. MeetingDescription = name and short description of the meeting + name and email of user
+ * 2. MeetingDatesAndTimes = possible dates and times when the meeting might occur
+ * 3. MeetingInvitations = emails of the participants
+ * */
 class MeetingSetup extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            page: 0,
+            datesAndTimes: [{}, {}, {}], // holds objects describing the dates and times of meetings
+            inviteEmails: [null, null, null], // holds the emails of the participants
+            page: 0, // holds the page index
+            // flags for conditional rendering of components
             showMeetingDescription: true,
             showMeetingDatesAndTimes: false,
             showMeetingInvitations: false,
             showNextButton: true, 
             showPreviousButton: false,
-            showSubmitButton: false,
-            datesAndTimes: [{}, {}, {}],
-            inviteEmails: [null, null, null, null, null, null]
+            showSubmitButton: false
+            // end flags section
         };
 
+        // bindings
         this.handleNextClick = this.handleNextClick.bind(this);
         this.handlePreviousClick = this.handlePreviousClick.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -27,29 +36,51 @@ class MeetingSetup extends Component {
         this.handleAddDateAndTime = this.handleAddDateAndTime.bind(this);
         this.handleDeleteDateAndTime = this.handleDeleteDateAndTime.bind(this);
         this.handleDeleteEmailInvitation = this.handleDeleteEmailInvitation.bind(this);
+        // end of bindings section
     }
 
+    /*
+     * Called when either the start date or the end date changes for an object from the datesAndTimes array.
+     * @param {number} index - the index of the object in the datesAndTimes array 
+     * @param {number} startDate - numeric value corresponding to the time for the specified date
+     * @param {number} endDate - numeric value corresponding to the time for the specified date
+     * */
     handleNewDateAndTime(index, startDate, endDate){
-        let newDatesAndTimes = this.state.datesAndTimes;
-        if(startDate) newDatesAndTimes[index].startDate = startDate;
-        if(endDate) newDatesAndTimes[index].endDate = endDate;
-        this.setState({datesAndTimes: newDatesAndTimes});
-    }
-
-    handleDeleteEmailInvitation(index){
-        let newInviteEmails = this.state.inviteEmails.filter((element, elementIndex)=> { return elementIndex !== index; });
-    }
-
-    handleDeleteDateAndTime(index){
-        let newDatesAndTimes = this.state.datesAndTimes.filter((element, elementIndex)=>{ return elementIndex !== index; });
-        this.setState({datesAndTimes: newDatesAndTimes});
-    }
-
-    handleAddDateAndTime(){
-        this.state.datesAndTimes.push(null);
+        if(startDate) this.state.datesAndTimes[index].startDate = startDate;
+        if(endDate) this.state.datesAndTimes[index].endDate = endDate;
         this.setState({datesAndTimes: this.state.datesAndTimes});
     }
 
+    /*
+     * Called when the information about the date and time of a meeting is deleted.
+     * @param {number} index - the index of the object that was deleted in the datesAndTimes array 
+     * */
+    handleDeleteDateAndTime(index){
+        let newDatesAndTimes = this.state.datesAndTimes.filter((element, elementIndex)=>{ return elementIndex !== index; });
+        console.log("newDatesAndTimes:", newDatesAndTimes);
+        this.setState({datesAndTimes: newDatesAndTimes});
+    }
+
+    /*
+     * Called when a new object describing the date and time of a meeting is added.
+     * */
+    handleAddDateAndTime(){
+        this.state.datesAndTimes.push({});
+        this.setState({datesAndTimes: this.state.datesAndTimes});
+    }
+
+    /*
+     * Called when an invitation email is deleted from the email participant list.
+     * @param {number} index - the index of the email that was deleted in the inviteEmails array 
+     * */
+    handleDeleteEmailInvitation(index){
+        let newInviteEmails = this.state.inviteEmails.filter((element, elementIndex)=>{ return elementIndex !== index; });
+    }
+
+    /*
+     * Handle next button click.
+     * @param {Event} event - the triggering event
+     * */
     handleNextClick(event){
         if(this.state.page === 0){
             this.setState({
@@ -71,6 +102,10 @@ class MeetingSetup extends Component {
         }
     }
 
+    /*
+     * Handle previous button click.
+     * @param {Event} event - the triggering event
+     * */
     handlePreviousClick(event){
         if(this.state.page === 2){
             this.setState({
@@ -92,12 +127,18 @@ class MeetingSetup extends Component {
         }
     }
 
+    /*
+     * Handle submit button click.
+     * @param {Event} event - the triggering event
+     * */
     handleSubmit(event){
         event.preventDefault();
         console.log("Submit");
     }
 
-
+    /*
+     * Render the component.
+     * */
     render(){
         return(
             <Grid className="meetingSetup">

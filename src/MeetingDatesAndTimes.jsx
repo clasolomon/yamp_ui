@@ -12,10 +12,6 @@ class MeetingDatesAndTimes extends Component {
         this.getDatesAndTimes= this.getDatesAndTimes.bind(this);
     }
 
-    handleAddClick(event){
-        this.props.onAddDateAndTime();
-    }
-
     handleChangeStartDate(index, dateObject){
         this.props.onNewDateAndTime(index, dateObject.getTime(), null);
     }
@@ -26,6 +22,10 @@ class MeetingDatesAndTimes extends Component {
 
     handleDeleteClick(index){
         this.props.onDeleteDateAndTime(index);
+    }
+
+    handleAddClick(event){
+        this.props.onAddDateAndTime();
     }
 
     getDatesAndTimes(){

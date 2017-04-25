@@ -2,19 +2,16 @@ import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-bootstrap';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
-import Body from './Body';
 import Header from './Header';
 import Footer from './Footer';
-import axios from 'axios';
+import { Route } from 'react-router-dom';
 import './App.css';
+import Login from './Login';
+import Register from './Register';
+import MeetingSetup from './MeetingSetup';
+import Start from './Start';
 
 import 'react-widgets/dist/css/react-widgets.css';
-
-var instance = axios.create({
-    baseURL: 'http://localhost:9000/',
-    timeout: 1000,
-    headers: {'Content-Type': 'text/plain'}
-});
 
 class App extends Component {
     componentWillMount(){
@@ -25,12 +22,15 @@ class App extends Component {
             <Grid>
                 <Row>
                     <Col xs={12} sm={12} md={12} lg={12}>
-                        <Header/>
+                        <Header appHistory={this.props.history}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col xs={12} sm={12} md={12} lg={12}>
-                        <Body/>
+                        <Route exact path="/" component={Start}/>
+                        <Route path="/login" component={Login}/>
+                        <Route path="/register" component={Register}/>
+                        <Route path="/meetingSetup" component={MeetingSetup}/>
                     </Col>
                 </Row>
                 <Row>
