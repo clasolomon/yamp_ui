@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import { Button } from 'react-bootstrap';
-import axios from 'axios';
 
 class Login extends Component {
     constructor(props) {

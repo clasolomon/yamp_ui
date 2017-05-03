@@ -3,7 +3,6 @@ import { Button, Grid, Row, Col } from 'react-bootstrap';
 import MeetingDatesAndTimes from './MeetingDatesAndTimes';
 import MeetingDescription from './MeetingDescription';
 import MeetingInvitations from './MeetingInvitations';
-import axios from 'axios';
 
 /*
  * MeetingSetup component renders three other components corresponding to the phase of the meeting setup process:

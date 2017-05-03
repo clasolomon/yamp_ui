@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Button } from 'react-bootstrap';
-import axios from 'axios';
+import axios from './axios-instance';
 
 class Register extends Component {
     constructor(props) {
@@ -25,12 +25,7 @@ class Register extends Component {
     }
 
     handleRegisterClick(event){
-        var instance = axios.create({
-              baseURL: 'http://localhost:9000/',
-              timeout: 2000
-        });
-
-        instance.post('/register', this.state)
+        axios.post('/register', this.state)
             .then((response)=>{
                 if(response.data.exists){
                     this.props.history.push({pathname:'/login', state:{showMessageAlreadyRegistered: true, email: response.data.email}}); 
