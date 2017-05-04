@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import { Button } from 'react-bootstrap';
+import { Panel, Button } from 'react-bootstrap';
+import { Form, FormGroup, FormControl, InputGroup, Glyphicon } from 'react-bootstrap';
 
 class Login extends Component {
     constructor(props) {
@@ -11,6 +12,7 @@ class Login extends Component {
             password: ''
         }
         this.handleLoginClick = this.handleLoginClick.bind(this);
+        this.handleCancelClick = this.handleCancelClick.bind(this);
     }
 
     handleInputChange(event){
@@ -26,9 +28,11 @@ class Login extends Component {
 
     }
 
+    handleCancelClick(){
+        this.props.history.push('/');
+    }
+
     componentWillMount(){
-        console.log('LOCATION:', this.props.location);
-        console.log('LOCATION.state:', this.props.location.state);
         if(this.props.location.state){
             this.setState(this.props.location.state);
         }
@@ -36,32 +40,47 @@ class Login extends Component {
 
     render(){
         return (
-            <div className="Login">
-                <h4>Login</h4>
-                { this.state.showMessageAfterRegistration && <RegistrationMessage/>}
-                { this.state.showMessageAlreadyRegistered && <AlreadyRegisteredMessage/> }
-                <p>
-                    Email
+            <Panel className="login">
+                <Form>
+                    { !this.state.showMessageAlreadyRegistered && !this.state.showMessageAfterRegistration && <LoginMessage/>}
+                    { this.state.showMessageAfterRegistration && <RegistrationMessage/>}
+                    { this.state.showMessageAlreadyRegistered && <AlreadyRegisteredMessage/> }
                     <br/>
-                    <input type="text" size="40" name="email" value={this.state.email} onChange={this.handleInputChange}/>
-                </p>
-                <p>
-                    Password
+                    <InputGroup>
+                        <InputGroup.Addon>
+                            <Glyphicon glyph="user" />
+                        </InputGroup.Addon>
+                        <FormControl type="email" size="40" name="email" placeholder="Email address" value={this.state.email} onChange={this.handleInputChange}/>
+                    </InputGroup>
                     <br/>
-                    <input type="text" size="40" name="password" value={this.state.password} onChange={this.handleInputChange}/>
-                </p>
-                <p><Button bsStyle="primary" onClick={this.handleLoginClick}>Log in</Button></p>
-            </div>
+                    <InputGroup>
+                        <InputGroup.Addon>
+                            <Glyphicon glyph="lock" />
+                        </InputGroup.Addon>
+                        <FormControl type="password" size="40" name="password" placeholder="Password" value={this.state.password} onChange={this.handleInputChange}/>
+                    </InputGroup>
+                    <br/>
+                    <FormGroup>
+                        <Button bsStyle="primary" onClick={this.handleLoginClick}>Log In</Button>
+                        {' '}
+                        <Button bsStyle="primary" onClick={this.handleCancelClick}>Cancel</Button>
+                    </FormGroup>
+                </Form>
+            </Panel>
         );
     }
 }
 
+function LoginMessage(props) {
+    return <h4>Log in to your account</h4>;
+}
+
 function RegistrationMessage(props) {
-    return <p>Your account has been created. Please login! </p>;
+    return <h4>Your account has been created!<br/>Log in to your account.</h4>;
 }
 
 function AlreadyRegisteredMessage(props) {
-    return <p>An account already exists with this email. Please login! </p>;
+    return <h4>An account already exists with this email!<br/>Log in to your account.</h4>;
 }
 
 export default Login;

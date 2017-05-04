@@ -5,6 +5,12 @@ body {
     background-color: lightblue;
 }
 
+.login{
+    margin: auto;
+    width: 35%;
+    text-align: center;
+}
+
 .footer{
     position: fixed;
     bottom: 0;
