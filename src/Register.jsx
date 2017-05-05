@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Panel, Image, Button } from 'react-bootstrap';
-import { FormControl, ControlLabel, FormGroup, Form } from 'react-bootstrap';
+import { InputGroup, FormControl, ControlLabel, FormGroup, Form } from 'react-bootstrap';
 import axios from './axios-instance';
 
 class Register extends Component {
@@ -53,23 +53,35 @@ class Register extends Component {
             <Panel className="register">
                 <Image src="/yamp_logo.png"/>
                 <RegisterMessage/>
+                <br/>
                 <Form className="register-form">
-                    <FormGroup>
-                        <ControlLabel>Your name</ControlLabel>
+                    <InputGroup>
+                        <InputGroup.Addon>
+                            <i className="fa fa-user-o" aria-hidden="true"></i> 
+                        </InputGroup.Addon>
                         <FormControl type="text" size="40" name="user_name" placeholder="Your name" value={this.state.user_name} onChange={this.handleInputChange}/>
-                    </FormGroup>
+                    </InputGroup>
                     <br/>
-                    <FormGroup>
-                        <ControlLabel>Email address</ControlLabel>
+                    <InputGroup>
+                        <InputGroup.Addon>
+                            <i className="fa fa-envelope-o" aria-hidden="true"></i>
+                        </InputGroup.Addon>
                         <FormControl type="email" size="40" name="email" placeholder="Email address" value={this.state.email} onChange={this.handleInputChange}/>
-                    </FormGroup>
+                    </InputGroup>
                     <br/>
-                    <FormGroup>
-                        <ControlLabel>Password</ControlLabel>
+                    <InputGroup>
+                        <InputGroup.Addon>
+                            <i className="fa fa-key" aria-hidden="true"></i>
+                        </InputGroup.Addon>
                         <FormControl  type="password" size="40" name="password" placeholder="Password" value={this.state.password} onChange={this.handleInputChange}/>
+                    </InputGroup>
                         <br/>
+                    <InputGroup>
+                        <InputGroup.Addon>
+                            <i className="fa fa-key" aria-hidden="true"></i>
+                        </InputGroup.Addon>
                         <FormControl  type="password" size="40" name="passwordConfirm" placeholder="Confirm password" value={this.state.passwordConfirm} onChange={this.handleInputChange}/>
-                    </FormGroup>
+                    </InputGroup>
                     <br/>
                     <FormGroup>
                         <Button bsStyle="primary" onClick={this.handleRegisterClick}>Register</Button>

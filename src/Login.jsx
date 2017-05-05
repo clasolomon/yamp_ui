@@ -42,21 +42,21 @@ class Login extends Component {
         return (
             <Panel className="login">
                 <Image src="/yamp_logo.png"/>
-                <Form>
                     { !this.state.showMessageAlreadyRegistered && !this.state.showMessageAfterRegistration && <LoginMessage/>}
                     { this.state.showMessageAfterRegistration && <RegistrationMessage/>}
                     { this.state.showMessageAlreadyRegistered && <AlreadyRegisteredMessage/> }
                     <br/>
+                <Form>
                     <InputGroup>
                         <InputGroup.Addon>
-                            <Glyphicon glyph="user" />
+                            <i className="fa fa-envelope-o" aria-hidden="true"></i>
                         </InputGroup.Addon>
                         <FormControl type="email" size="40" name="email" placeholder="Email address" value={this.state.email} onChange={this.handleInputChange}/>
                     </InputGroup>
                     <br/>
                     <InputGroup>
                         <InputGroup.Addon>
-                            <Glyphicon glyph="lock" />
+                            <i className="fa fa-key" aria-hidden="true"></i>
                         </InputGroup.Addon>
                         <FormControl type="password" size="40" name="password" placeholder="Password" value={this.state.password} onChange={this.handleInputChange}/>
                     </InputGroup>

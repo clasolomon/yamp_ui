@@ -7,6 +7,7 @@ import Register from './Register';
 import MeetingSetup from './MeetingSetup';
 import createHistory from 'history/createBrowserHistory';
 import './index.css';
+import 'font-awesome/css/font-awesome.min.css';
 
 const appHistory = createHistory();
 
