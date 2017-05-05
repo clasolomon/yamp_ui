@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Panel, Button } from 'react-bootstrap';
+import { Panel, Image, Button } from 'react-bootstrap';
 import { FormControl, ControlLabel, FormGroup, Form } from 'react-bootstrap';
 import axios from './axios-instance';
 
@@ -51,11 +51,12 @@ class Register extends Component {
     render(){
         return (
             <Panel className="register">
-                <Form>
-                    <RegisterMessage/>
+                <Image src="/yamp_logo.png"/>
+                <RegisterMessage/>
+                <Form className="register-form">
                     <FormGroup>
                         <ControlLabel>Your name</ControlLabel>
-                            <FormControl type="text" size="40" name="user_name" placeholder="Your name" value={this.state.user_name} onChange={this.handleInputChange}/>
+                        <FormControl type="text" size="40" name="user_name" placeholder="Your name" value={this.state.user_name} onChange={this.handleInputChange}/>
                     </FormGroup>
                     <br/>
                     <FormGroup>

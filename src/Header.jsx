@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, PageHeader, Grid, Row, Col } from 'react-bootstrap';
+import { Button, Image, PageHeader, Grid, Row, Col } from 'react-bootstrap';
 
 class Header extends Component {
     constructor(props){
@@ -19,10 +19,11 @@ class Header extends Component {
     render() {
         return (
             <PageHeader>
-                <Grid>
+                <Grid className="header">
                     <Row>
                         <Col xs={9} sm={9} md={9} lg={9}>
-                            YAMP <small>Yet Another Meeting Planner</small>
+                            <Image src="/yamp_logo_small.png"/>
+                <small className="header-text">Yet Another Meeting Planner</small>
                         </Col>
                         <Col xs={3} sm={3} md={3} lg={3}>
                             <Button bsStyle="primary" className="headerLoginButton" onClick={this.handleLoginClick}>Log in</Button>

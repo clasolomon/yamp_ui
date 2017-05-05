@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Panel, Button } from 'react-bootstrap';
+import { Panel, Image, Button } from 'react-bootstrap';
 import { Form, FormGroup, FormControl, InputGroup, Glyphicon } from 'react-bootstrap';
 
 class Login extends Component {
@@ -41,6 +41,7 @@ class Login extends Component {
     render(){
         return (
             <Panel className="login">
+                <Image src="/yamp_logo.png"/>
                 <Form>
                     { !this.state.showMessageAlreadyRegistered && !this.state.showMessageAfterRegistration && <LoginMessage/>}
                     { this.state.showMessageAfterRegistration && <RegistrationMessage/>}
