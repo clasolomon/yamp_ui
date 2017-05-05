@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import { Button } from 'react-bootstrap';
+import { Panel, Button } from 'react-bootstrap';
+import { FormControl, ControlLabel, FormGroup, Form } from 'react-bootstrap';
 import axios from './axios-instance';
 
 class Register extends Component {
@@ -8,11 +9,13 @@ class Register extends Component {
         this.state = {
             user_name: '',
             email: '',
-            password: ''
+            password: '',
+            passwordConfirm: ''
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleRegisterClick = this.handleRegisterClick.bind(this);
+        this.handleCancelClick = this.handleCancelClick.bind(this);
     }
 
     handleInputChange(event){
@@ -22,6 +25,10 @@ class Register extends Component {
         this.setState({
             [name]: value
         });
+    }
+
+    handleCancelClick(){
+        this.props.history.push('/');
     }
 
     handleRegisterClick(event){
@@ -43,27 +50,38 @@ class Register extends Component {
 
     render(){
         return (
-            <div className="Register">
-                <h4>Register</h4>
-                <p>
-                    User name
+            <Panel className="register">
+                <Form>
+                    <RegisterMessage/>
+                    <FormGroup>
+                        <ControlLabel>Your name</ControlLabel>
+                            <FormControl type="text" size="40" name="user_name" placeholder="Your name" value={this.state.user_name} onChange={this.handleInputChange}/>
+                    </FormGroup>
                     <br/>
-                    <input type="text" size="40" name="user_name" value={this.state.user_name} onChange={this.handleInputChange}/>
-                </p>
-                <p>
-                    E-mail address 
+                    <FormGroup>
+                        <ControlLabel>Email address</ControlLabel>
+                        <FormControl type="email" size="40" name="email" placeholder="Email address" value={this.state.email} onChange={this.handleInputChange}/>
+                    </FormGroup>
                     <br/>
-                    <input type="email" size="40" name="email" value={this.state.email} onChange={this.handleInputChange}/>
-                </p>
-                <p>
-                    Password
+                    <FormGroup>
+                        <ControlLabel>Password</ControlLabel>
+                        <FormControl  type="password" size="40" name="password" placeholder="Password" value={this.state.password} onChange={this.handleInputChange}/>
+                        <br/>
+                        <FormControl  type="password" size="40" name="passwordConfirm" placeholder="Confirm password" value={this.state.passwordConfirm} onChange={this.handleInputChange}/>
+                    </FormGroup>
                     <br/>
-                    <input type="text" size="40" name="password" value={this.state.password} onChange={this.handleInputChange}/>
-                </p>
-                <p><Button bsStyle="primary" onClick={this.handleRegisterClick}>Register</Button></p>
-            </div>
+                    <FormGroup>
+                        <Button bsStyle="primary" onClick={this.handleRegisterClick}>Register</Button>
+                        {' '}
+                        <Button bsStyle="primary" onClick={this.handleCancelClick}>Cancel</Button>
+                    </FormGroup>
+                </Form>
+            </Panel>
         );
     }
 }
 
+function RegisterMessage(props){
+    return <h4>Create free account</h4>;
+}
 export default Register;

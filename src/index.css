@@ -11,6 +11,11 @@ body {
     text-align: center;
 }
 
+.register{
+    margin: auto;
+    width: 35%;
+}
+
 .footer{
     position: fixed;
     bottom: 0;
