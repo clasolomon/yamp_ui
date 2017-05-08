@@ -35,6 +35,7 @@ class MeetingSetup extends Component {
         this.handleAddDateAndTime = this.handleAddDateAndTime.bind(this);
         this.handleDeleteDateAndTime = this.handleDeleteDateAndTime.bind(this);
         this.handleDeleteEmailInvitation = this.handleDeleteEmailInvitation.bind(this);
+        this.handleAddEmailInvitation = this.handleAddEmailInvitation.bind(this);
         // end of bindings section
     }
 
@@ -74,6 +75,15 @@ class MeetingSetup extends Component {
      * */
     handleDeleteEmailInvitation(index){
         let newInviteEmails = this.state.inviteEmails.filter((element, elementIndex)=>{ return elementIndex !== index; });
+        this.setState({inviteEmails: newInviteEmails});
+    }
+
+    /*
+     * Called when a new email invitation is added.
+     * */
+    handleAddEmailInvitation(){
+        this.state.inviteEmails.push(null);
+        this.setState({inviteEmails: this.state.inviteEmails});
     }
 
     /*
@@ -143,7 +153,7 @@ class MeetingSetup extends Component {
             <Grid className="meetingSetup">
                 { this.state.showMeetingDescription && <MeetingDescription/> }
                 { this.state.showMeetingDatesAndTimes && <MeetingDatesAndTimes onAddDateAndTime={this.handleAddDateAndTime} onDeleteDateAndTime={this.handleDeleteDateAndTime} onNewDateAndTime={this.handleNewDateAndTime} datesAndTimes={this.state.datesAndTimes}/> }
-                { this.state.showMeetingInvitations && <MeetingInvitations onDeleteEmailInvitation={this.handleDeleteEmailInvitation} inviteEmails={this.state.inviteEmails}/> }
+                { this.state.showMeetingInvitations && <MeetingInvitations onAddEmailInvitation={this.handleAddEmailInvitation} onDeleteEmailInvitation={this.handleDeleteEmailInvitation} inviteEmails={this.state.inviteEmails}/> }
                 <Row>
                     <Col xs={12} sm={12} md={12} lg={12}>
                         <br/>
