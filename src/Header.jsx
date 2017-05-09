@@ -6,6 +6,7 @@ class Header extends Component {
         super(props);
         this.handleLoginClick = this.handleLoginClick.bind(this);
         this.handleRegisterClick = this.handleRegisterClick.bind(this);
+        this.getClassNameForLogin = this.getClassNameForLogin.bind(this);
     }
 
     handleLoginClick(){
@@ -16,24 +17,49 @@ class Header extends Component {
         this.props.appHistory.push("/register");
     }
 
+    getClassNameForLogin(){
+        if(this.props.appHistory.location.pathname === '/register'){
+            return 'forLoginAndRegister';
+        }
+    }
+
     render() {
+        {console.log(this.props.appHistory)}
         return (
             <PageHeader>
                 <Grid className="header">
                     <Row>
-                        <Col xs={9} sm={9} md={9} lg={9}>
+                        <Col xs={1} sm={1} md={1} lg={1}>
                             <Image src="/yamp_logo_small.png"/>
-                <small className="header-text">Yet Another Meeting Planner</small>
                         </Col>
-                        <Col xs={3} sm={3} md={3} lg={3}>
-                            <Button bsStyle="primary" className="headerLoginButton" onClick={this.handleLoginClick}>Log in</Button>
-                            <Button bsStyle="primary" className="headerRegisterButton" onClick={this.handleRegisterClick}>Register</Button>
+                        <Col className="header-logo-text"  xs={4} sm={4} md={4} lg={4}>
+                            <LogoMessage/>
+                        </Col>
+                        <Col className="header-buttons"  xs={7} sm={7} md={7} lg={7}>
+                            { this.props.appHistory.location.pathname === '/register' && <LoginHeaderMessage/> }
+                            { this.props.appHistory.location.pathname === '/login'  && <RegisterHeaderMessage/> }
+                            {' '}
+                            { this.props.appHistory.location.pathname !== '/login' && <Button bsStyle="primary" className={this.getClassNameForLogin()} onClick={this.handleLoginClick}>Log in</Button> }
+                            {' '}
+                            { this.props.appHistory.location.pathname !== '/register' && <Button bsStyle="primary" className="forLoginAndRegister" onClick={this.handleRegisterClick}>Register</Button> }
                         </Col>
                     </Row>
                 </Grid>
             </PageHeader>
         );
     }
+}
+
+function LogoMessage(){
+    return <span className="header-text">Yet Another Meeting Planner</span>
+}
+
+function RegisterHeaderMessage(){
+    return <span className="header-text">Already have an account?</span>
+}
+
+function LoginHeaderMessage(){
+    return <span className="header-text">New to YAMP?</span>
 }
 
 export default Header;
