@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-bootstrap';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
-import Header from './Header';
+import Header from './header';
 import Footer from './Footer';
 import { Route } from 'react-router-dom';
 import './App.css';

@@ -34,24 +34,3 @@ body {
 .mdt-dateTimePicker {
     margin-bottom: 10px;
 }
-/* comment */
-.forLoginAndRegister {
-    margin-right: 6%;
-}
-
-.header-text {
-    font-family: Verdana, Arial, Helvetica, sans-serif;
-    font-size: large;
-    color: #337ab7;
-}
-
-.header-buttons {
-    margin-top: 3%;
-    text-align: right;
-}
-
-.header-logo-text {
-    margin-top: 3%;
-    padding-left: 4%;
-    text-align: left;
-}
