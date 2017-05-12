@@ -1,12 +1,14 @@
 import React, {Component} from 'react';
 import { Panel, Image, Button } from 'react-bootstrap';
 import { InputGroup, FormControl, ControlLabel, FormGroup, Form } from 'react-bootstrap';
+import ErrorView from './ErrorView';
 import axios from './axios-instance';
 
 class Register extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            errorOccured: false,
             user_name: '',
             email: '',
             password: '',
@@ -28,23 +30,21 @@ class Register extends Component {
     }
 
     handleCancelClick(){
-        this.props.history.push('/');
+        this.props.history.replace('/');
     }
 
     handleRegisterClick(event){
         axios.post('/register', this.state)
             .then((response)=>{
-                if(response.data.exists){
+                if(!response.data.isNewUser){// if the user is already in database
                     this.props.history.push({pathname:'/login', state:{showMessageAlreadyRegistered: true, email: response.data.email}}); 
                     return;
                 }
-                if(response.data){
-                    this.props.history.push({pathname:'/login', state:{showMessageAfterRegistration: true, email: response.data.email}}); 
-                }
-                console.log(response);
+                // if it is a new user
+                this.props.history.push({pathname:'/login', state:{showMessageAfterRegistration: true, email: response.data.email}}); 
             })
             .catch((error)=>{
-                console.log(error);
+                this.setState({errorOccured: true});
             });
     }
 
@@ -75,7 +75,7 @@ class Register extends Component {
                         </InputGroup.Addon>
                         <FormControl  type="password" size="40" name="password" placeholder="Password" value={this.state.password} onChange={this.handleInputChange}/>
                     </InputGroup>
-                        <br/>
+                    <br/>
                     <InputGroup>
                         <InputGroup.Addon>
                             <i className="fa fa-key" aria-hidden="true"></i>
@@ -89,6 +89,7 @@ class Register extends Component {
                         <Button bsStyle="primary" onClick={this.handleCancelClick}>Cancel</Button>
                     </FormGroup>
                 </Form>
+                {this.state.errorOccured && <ErrorView className="errorView" history={this.props.history}/>}
             </Panel>
         );
     }
