@@ -37,11 +37,11 @@ class Register extends Component {
         axios.post('/register', this.state)
             .then((response)=>{
                 if(!response.data.isNewUser){// if the user is already in database
-                    this.props.history.push({pathname:'/login', state:{showMessageAlreadyRegistered: true, email: response.data.email}}); 
+                    this.props.history.push({pathname:'/login', state:{showMessageAfterRegistration: false, showMessageAlreadyRegistered: true, email: response.data.email}}); 
                     return;
                 }
                 // if it is a new user
-                this.props.history.push({pathname:'/login', state:{showMessageAfterRegistration: true, email: response.data.email}}); 
+                this.props.history.push({pathname:'/login', state:{showMessageAfterRegistration: true, showMessageAlreadyRegistered: false, email: response.data.email}}); 
             })
             .catch((error)=>{
                 this.setState({errorOccured: true});
