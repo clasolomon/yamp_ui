@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Image, PageHeader, Grid, Row, Col } from 'react-bootstrap';
+import { ButtonToolbar, DropdownButton, MenuItem } from 'react-bootstrap';
 import './Header.css';
 
 class Header extends Component {
@@ -11,21 +12,20 @@ class Header extends Component {
     }
 
     handleLoginClick(){
-        this.props.appHistory.push("/login"); 
+        this.props.history.push("/login"); 
     }
 
     handleRegisterClick(){
-        this.props.appHistory.push("/register");
+        this.props.history.push("/register");
     }
 
     getClassNameForLogin(){
-        if(this.props.appHistory.location.pathname === '/register'){
+        if(this.props.history.location.pathname === '/register'){
             return 'forLoginAndRegister';
         }
     }
 
     render() {
-        {console.log(this.props.appHistory)}
         return (
             <PageHeader>
                 <Grid className="header">
@@ -37,18 +37,27 @@ class Header extends Component {
                             <LogoMessage/>
                         </Col>
                         <Col className="header-buttons"  xs={7} sm={7} md={7} lg={7}>
-                            { this.props.appHistory.location.pathname === '/register' && <LoginHeaderMessage/> }
-                            { this.props.appHistory.location.pathname === '/login'  && <RegisterHeaderMessage/> }
+                            { this.props.history.location.pathname === '/register' && !this.props.loggedUser && <LoginHeaderMessage/> }
+                            { this.props.history.location.pathname === '/login' && !this.props.loggedUser  && <RegisterHeaderMessage/> }
                             {' '}
-                            { this.props.appHistory.location.pathname !== '/login' && <Button bsStyle="primary" className={this.getClassNameForLogin()} onClick={this.handleLoginClick}>Log in</Button> }
+                            { this.props.history.location.pathname !== '/login' && !this.props.loggedUser  && <Button bsStyle="primary" className={this.getClassNameForLogin()} onClick={this.handleLoginClick}>Log in</Button> }
                             {' '}
-                            { this.props.appHistory.location.pathname !== '/register' && <Button bsStyle="primary" className="forLoginAndRegister" onClick={this.handleRegisterClick}>Register</Button> }
+                            { this.props.history.location.pathname !== '/register' && !this.props.loggedUser && <Button bsStyle="primary" className="forLoginAndRegister" onClick={this.handleRegisterClick}>Register</Button> }
+                            { this.props.loggedUser && <LoggedUserDropdownButton loggedUser={this.props.loggedUser}/> }
                         </Col>
                     </Row>
                 </Grid>
             </PageHeader>
         );
     }
+}
+
+function LoggedUserDropdownButton(props){
+    return  <DropdownButton bsStyle="primary" title={props.loggedUser.name} id="dropdown-size-medium">
+        <MenuItem eventKey="1">Settings</MenuItem>
+        <MenuItem divider />
+        <MenuItem eventKey="2">Logout</MenuItem>
+    </DropdownButton>
 }
 
 function LogoMessage(){

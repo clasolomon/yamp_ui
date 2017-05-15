@@ -14,15 +14,34 @@ import Start from './Start';
 import 'react-widgets/dist/css/react-widgets.css';
 
 class App extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            loggedUser: undefined
+        };
+    }
+
     componentWillMount(){
         momentLocalizer(Moment);
     }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps.location.state && nextProps.location.state.email){
+            this.setState({
+                loggedUser: {
+                    name: nextProps.location.state.username,
+                    email: nextProps.location.state.email
+                }
+            }); 
+        }
+    }
+
     render() {
         return (
             <Grid>
                 <Row>
                     <Col xs={12} sm={12} md={12} lg={12}>
-                        <Header appHistory={this.props.history}/>
+                        <Route path="/" render={(props)=>(<Header {...props} loggedUser={this.state.loggedUser}/>)}/> 
                     </Col>
                 </Row>
                 <Row>
