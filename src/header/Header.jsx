@@ -43,7 +43,7 @@ class Header extends Component {
                             { this.props.history.location.pathname !== '/login' && !this.props.loggedUser  && <Button bsStyle="primary" className={this.getClassNameForLogin()} onClick={this.handleLoginClick}>Log in</Button> }
                             {' '}
                             { this.props.history.location.pathname !== '/register' && !this.props.loggedUser && <Button bsStyle="primary" className="forLoginAndRegister" onClick={this.handleRegisterClick}>Register</Button> }
-                            { this.props.loggedUser && <LoggedUserDropdownButton loggedUser={this.props.loggedUser}/> }
+                            { this.props.loggedUser && <LoggedUserDropdownButton loggedUser={this.props.loggedUser} handleLogout={this.props.handleLogout}/> }
                         </Col>
                     </Row>
                 </Grid>
@@ -56,7 +56,7 @@ function LoggedUserDropdownButton(props){
     return  <DropdownButton bsStyle="primary" title={props.loggedUser.name} id="dropdown-size-medium">
         <MenuItem eventKey="1">Settings</MenuItem>
         <MenuItem divider />
-        <MenuItem eventKey="2">Logout</MenuItem>
+        <MenuItem eventKey="2" onClick={props.handleLogout}>Logout</MenuItem>
     </DropdownButton>
 }
 

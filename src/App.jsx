@@ -19,6 +19,14 @@ class App extends Component {
         this.state = {
             loggedUser: undefined
         };
+
+        this.handleLogout = this.handleLogout.bind(this);
+    }
+
+    handleLogout(){
+        this.setState({
+            loggedUser: undefined
+        });
     }
 
     componentWillMount(){
@@ -26,7 +34,7 @@ class App extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-        if(nextProps.location.state && nextProps.location.state.email){
+        if(nextProps.match.isExact && nextProps.location.state && nextProps.location.state.email){
             this.setState({
                 loggedUser: {
                     name: nextProps.location.state.username,
@@ -41,7 +49,7 @@ class App extends Component {
             <Grid>
                 <Row>
                     <Col xs={12} sm={12} md={12} lg={12}>
-                        <Route path="/" render={(props)=>(<Header {...props} loggedUser={this.state.loggedUser}/>)}/> 
+                        <Route path="/" render={(props)=>(<Header {...props} loggedUser={this.state.loggedUser} handleLogout={this.handleLogout}/>)}/> 
                     </Col>
                 </Row>
                 <Row>
