@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import axios from './axios-instance';
 
 class ErrorView extends Component {
     constructor(props) {
@@ -9,7 +8,7 @@ class ErrorView extends Component {
     }
 
     handleCloseClick(){
-        this.props.history.replace('/');
+        this.props.history.replace({pathname: '/', state: {errorOccured: false}});
     }
 
     render(){

@@ -1,26 +1,31 @@
 import React, { Component } from 'react';
-import { Grid, Row, Col } from 'react-bootstrap';
+import { Col, Grid, Row } from 'react-bootstrap';
+import { Route } from 'react-router-dom';
+
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
-import Header from './header';
+
+import ErrorView from './ErrorView';
 import Footer from './Footer';
-import { Route } from 'react-router-dom';
-import './App.css';
+import Header from './header';
 import Login from './Login';
-import Register from './Register';
 import MeetingSetup from './MeetingSetup';
+import Register from './Register';
 import Start from './Start';
 
+import './App.css';
 import 'react-widgets/dist/css/react-widgets.css';
 
 class App extends Component {
     constructor(props){
         super(props);
         this.state = {
-            loggedUser: undefined
+            loggedUser: undefined,
+            errorOccured: false
         };
 
         this.handleLogout = this.handleLogout.bind(this);
+        this.handleError = this.handleError.bind(this);
     }
 
     handleLogout(){
@@ -29,18 +34,31 @@ class App extends Component {
         });
     }
 
+    handleError(){
+        this.setState({
+            errorOccured: true
+        });
+    }
+
     componentWillMount(){
         momentLocalizer(Moment);
     }
 
     componentWillReceiveProps(nextProps){
-        if(nextProps.match.isExact && nextProps.location.state && nextProps.location.state.email){
-            this.setState({
-                loggedUser: {
-                    name: nextProps.location.state.username,
-                    email: nextProps.location.state.email
-                }
-            }); 
+        if(nextProps.match.isExact && nextProps.location.state){
+            if(nextProps.location.state.email){
+                this.setState({
+                    loggedUser: {
+                        name: nextProps.location.state.username,
+                        email: nextProps.location.state.email
+                    }
+                }); 
+            }
+            if(Object.prototype.hasOwnProperty.call(nextProps.location.state, 'errorOccured')){
+                this.setState({
+                    errorOccured: false
+                }); 
+            }
         }
     }
 
@@ -55,9 +73,10 @@ class App extends Component {
                 <Row>
                     <Col xs={12} sm={12} md={12} lg={12}>
                         <Route exact path="/" component={Start}/>
-                        <Route path="/login" component={Login}/>
-                        <Route path="/register" component={Register}/>
+                        <Route path="/login" render={(props)=>(<Login {...props} handleError={this.handleError}/>)}/>
+                        <Route path="/register" render={(props)=>(<Register {...props} handleError={this.handleError}/>)}/>
                         <Route path="/meetingSetup" component={MeetingSetup}/>
+                        {this.state.errorOccured && <ErrorView className="errorView" history={this.props.history}/>}
                     </Col>
                 </Row>
                 <Row>

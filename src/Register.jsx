@@ -1,14 +1,12 @@
 import React, {Component} from 'react';
-import { Panel, Image, Button } from 'react-bootstrap';
-import { InputGroup, FormControl, ControlLabel, FormGroup, Form } from 'react-bootstrap';
-import ErrorView from './ErrorView';
+import { Panel, Button, Image } from 'react-bootstrap';
+import { Form, FormControl, FormGroup, InputGroup } from 'react-bootstrap';
 import axios from './axios-instance';
 
 class Register extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            errorOccured: false,
             user_name: '',
             email: '',
             password: '',
@@ -29,7 +27,7 @@ class Register extends Component {
         });
     }
 
-    handleCancelClick(){
+    handleCancelClick(event){
         this.props.history.replace('/');
     }
 
@@ -43,8 +41,8 @@ class Register extends Component {
                 // if it is a new user
                 this.props.history.push({pathname:'/login', state:{showMessageAfterRegistration: true, showMessageAlreadyRegistered: false, email: response.data.email}}); 
             })
-            .catch((error)=>{
-                this.setState({errorOccured: true});
+            .catch((err)=>{
+                this.props.handleError();
             });
     }
 
@@ -89,7 +87,6 @@ class Register extends Component {
                         <Button bsStyle="primary" onClick={this.handleCancelClick}>Cancel</Button>
                     </FormGroup>
                 </Form>
-                {this.state.errorOccured && <ErrorView className="errorView" history={this.props.history}/>}
             </Panel>
         );
     }
@@ -98,4 +95,5 @@ class Register extends Component {
 function RegisterMessage(props){
     return <h4>Create free account</h4>;
 }
+
 export default Register;

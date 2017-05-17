@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Form, FormControl, FormGroup, ControlLabel, Button, Row, Col } from 'react-bootstrap';
+import { Button, Col, Row } from 'react-bootstrap';
+import { Form, FormControl, FormGroup } from 'react-bootstrap';
 
 class MeetingInvitations extends Component {
     constructor(props){

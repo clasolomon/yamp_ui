@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Button, Image, PageHeader, Grid, Row, Col } from 'react-bootstrap';
-import { ButtonToolbar, DropdownButton, MenuItem } from 'react-bootstrap';
+import { Col, Grid, Row } from 'react-bootstrap';
+import { Button, Image, PageHeader } from 'react-bootstrap';
+import { DropdownButton, MenuItem } from 'react-bootstrap';
 import './Header.css';
 
 class Header extends Component {

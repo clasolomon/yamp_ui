@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import { Alert, Panel, Image, Button } from 'react-bootstrap';
-import { Form, FormGroup, FormControl, InputGroup, Glyphicon } from 'react-bootstrap';
+import { Alert, Button, Image, Panel } from 'react-bootstrap';
+import { Form, FormControl, FormGroup, InputGroup } from 'react-bootstrap';
 import axios from './axios-instance';
 
 class Login extends Component {
@@ -27,26 +27,30 @@ class Login extends Component {
         });
     }
 
-    handleLoginClick(){
+    handleLoginClick(event){
         axios.post('/login', {email: this.state.email, password: this.state.password})
             .then((response)=>{
                 this.props.history.push({pathname:'/', state:{username: response.data.user_name, email: response.data.email}}); 
             })
             .catch((err)=>{
-                this.setState({
-                    showMessageWrongEmailOrPassword: true,
-                    showMessageAfterRegistration: false,
-                    showMessageAlreadyRegistered: false
-                });
+                if(err.response && err.response.status === 401){ // if unauthorized
+                    this.setState({
+                        showMessageWrongEmailOrPassword: true,
+                        showMessageAfterRegistration: false,
+                        showMessageAlreadyRegistered: false
+                    });
+                    return;
+                }
+                this.props.handleError();
             });
     }
 
-    handleCancelClick(){
+    handleCancelClick(event){
         this.props.history.push('/');
     }
 
     componentWillMount(){
-        if(this.props.location.state){
+        if(this.props.match.isExact && this.props.location.state){
             this.setState(this.props.location.state);
         }
     }
