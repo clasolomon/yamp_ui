@@ -1,31 +1,21 @@
 import React, { Component } from 'react';
 import { DateTimePicker } from 'react-widgets';
-import { Button, Row, Col } from 'react-bootstrap';
+import { Alert, Button, Row, Col } from 'react-bootstrap';
 
 class MeetingDatesAndTimes extends Component {
     constructor(props){
         super(props);
-        this.handleAddClick = this.handleAddClick.bind(this);
-        this.handleDeleteClick = this.handleDeleteClick.bind(this);
         this.handleChangeStartDate = this.handleChangeStartDate.bind(this);
         this.handleChangeEndDate = this.handleChangeEndDate.bind(this);
         this.getDatesAndTimes= this.getDatesAndTimes.bind(this);
     }
 
     handleChangeStartDate(index, dateObject){
-        this.props.onNewDateAndTime(index, dateObject.getTime(), null);
+        this.props.changeDateAndTime(index, dateObject.getTime(), null);
     }
 
     handleChangeEndDate(index, dateObject){
-        this.props.onNewDateAndTime(index, null, dateObject.getTime());
-    }
-
-    handleDeleteClick(index){
-        this.props.onDeleteDateAndTime(index);
-    }
-
-    handleAddClick(event){
-        this.props.onAddDateAndTime();
+        this.props.changeDateAndTime(index, null, dateObject.getTime());
     }
 
     getDatesAndTimes(){
@@ -51,6 +41,7 @@ class MeetingDatesAndTimes extends Component {
                 {console.log("DatesAndTimes:", this.props.datesAndTimes)}
                 <Col xs={12} sm={12} md={12} lg={12}>
                     <h4>Choose possible dates and times for your meeting:</h4>
+                    { this.props.showAtLeastOneDateAndTimeErrorMessage && <AtLeastOneDateAndTimeErrorMessage/>}
                     {
                         this.getDatesAndTimes().map((dateObject, index) => {
                             return (<Row key={"r" + index}>
@@ -77,21 +68,27 @@ class MeetingDatesAndTimes extends Component {
                                         key={"b" + index} 
                                         bsStyle="primary" 
                                         bsSize="small" 
-                                        onClick={this.handleDeleteClick.bind(null, index)}
+                                        disabled={this.props.datesAndTimes.length > 1 ? false : true}
+                                        onClick={this.props.deleteDateAndTime.bind(null, index)}
                                     >Delete</Button> 
                                 </Col>
                                 <Col xs={1} sm={1} md={1} lg={1} key={"c4" + index}>
                                     {index===this.props.datesAndTimes.length-1 ? <Button 
                                         bsStyle="primary" 
                                         bsSize="small" 
-                                        onClick={this.handleAddClick}
+                                        onClick={this.props.addDateAndTime}
                                     >Add</Button>:null} 
                                 </Col>
                             </Row>);
                         })
-                    }
-                </Col>
-            </Row>
+                        }
+                    </Col>
+                </Row>
         )}
 }
+
+function AtLeastOneDateAndTimeErrorMessage(props){
+    return <Alert bsStyle="danger">Please submit at least one starting and ending date and time for your meeting.</Alert>;
+}
+
 module.exports = MeetingDatesAndTimes;
