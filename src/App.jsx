@@ -34,6 +34,7 @@ class App extends Component {
         this.setState({
             loggedUser: undefined
         });
+        this.props.history.replace({pathname: '/'});
     }
 
     handleError(){
@@ -74,11 +75,11 @@ class App extends Component {
                 </Row>
                 <Row>
                     <Col xs={12} sm={12} md={12} lg={12}>
-                        <Route exact path="/" component={Start}/>
+                        <Route exact path="/" render={(props)=>(<Start {...props} loggedUser={this.state.loggedUser}/>)}/>
                         <Route path="/login" render={(props)=>(<Login {...props} handleError={this.handleError}/>)}/>
                         <Route path="/register" render={(props)=>(<Register {...props} handleError={this.handleError}/>)}/>
-                        <Route path="/meetingSetup" render={(props)=>(<MeetingSetup {...props} handleError={this.handleError}/>)}/>
-                        <Route path="/endMeetingSetup" component={MeetingSetupEnd}/>
+                        <Route path="/meetingSetup" render={(props)=>(<MeetingSetup {...props} loggedUser={this.state.loggedUser} handleError={this.handleError}/>)}/>
+                        <Route path="/endMeetingSetup" render={(props)=>(<MeetingSetupEnd {...props} loggedUser={this.state.loggedUser}/>)}/>
                         <Route path="/meeting-invitation/:invitation_id" render={(props)=>(<Meeting {...props} handleError={this.handleError}/>)}/>
                         {this.state.errorOccured && <ErrorView className="errorView" history={this.props.history}/>}
                     </Col>

@@ -64,7 +64,7 @@ class Meeting extends Component {
     handleSubmitClick(event){
         axios.post('/submitAcceptedDatesAndTimes', {invitation_id: this.state.invitationId, accepted_dates_and_times: this.state.attendantsAcceptedDatesAndTimes[this.state.attendantEmail]})
             .then((response)=>{
-                //                this.props.history.push({pathname:'/', state:{username: response.data.user_name, email: response.data.email}}); 
+                this.props.history.replace({pathname:'/'}); 
             })
             .catch((err)=>{
                 this.props.handleError();
