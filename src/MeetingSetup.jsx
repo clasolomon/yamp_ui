@@ -3,6 +3,7 @@ import { Button, Grid, Row, Col } from 'react-bootstrap';
 import MeetingDatesAndTimes from './MeetingDatesAndTimes';
 import MeetingDescription from './MeetingDescription';
 import MeetingInvitations from './MeetingInvitations';
+import axios from './axios-instance';
 
 /*
  * MeetingSetup component renders three other components corresponding to the phase of the meeting setup process:
@@ -169,7 +170,7 @@ class MeetingSetup extends Component {
 
             this.setState({showAtLeastOneDateAndTimeErrorMessage: !atLeastOneDateAndTime}); 
 
-            if(!atLeastOneDateAndTime ){
+            if(!atLeastOneDateAndTime){
                 return;
             }
 
@@ -235,7 +236,23 @@ class MeetingSetup extends Component {
             return; 
         }
 
-        console.log("Submit");
+        let newMeeting = {
+            user_name: this.state.user_name,
+            user_email: this.state.user_email,
+            meeting_name: this.state.meeting_name,
+            meeting_description: this.state.meeting_description,
+            datesAndTimes: this.state.datesAndTimes.filter((element) => Object.keys(element).length>0), 
+            inviteEmails: this.state.inviteEmails.filter((element) => element!='')
+        };
+
+        axios.post('/create-meeting', newMeeting)
+            .then((response)=>{
+                this.props.history.replace('/endMeetingSetup');
+            })
+            .catch((err)=>{
+                console.log('create-meeting err:', err);
+                this.props.handleError();
+            });
     }
 
     /*

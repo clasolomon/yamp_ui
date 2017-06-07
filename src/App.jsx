@@ -12,6 +12,8 @@ import Login from './Login';
 import MeetingSetup from './MeetingSetup';
 import Register from './Register';
 import Start from './Start';
+import MeetingSetupEnd from './MeetingSetupEnd';
+import Meeting from './Meeting';
 
 import './App.css';
 import 'react-widgets/dist/css/react-widgets.css';
@@ -75,7 +77,9 @@ class App extends Component {
                         <Route exact path="/" component={Start}/>
                         <Route path="/login" render={(props)=>(<Login {...props} handleError={this.handleError}/>)}/>
                         <Route path="/register" render={(props)=>(<Register {...props} handleError={this.handleError}/>)}/>
-                        <Route path="/meetingSetup" component={MeetingSetup}/>
+                        <Route path="/meetingSetup" render={(props)=>(<MeetingSetup {...props} handleError={this.handleError}/>)}/>
+                        <Route path="/endMeetingSetup" component={MeetingSetupEnd}/>
+                        <Route path="/meeting-invitation/:invitation_id" render={(props)=>(<Meeting {...props} handleError={this.handleError}/>)}/>
                         {this.state.errorOccured && <ErrorView className="errorView" history={this.props.history}/>}
                     </Col>
                 </Row>
