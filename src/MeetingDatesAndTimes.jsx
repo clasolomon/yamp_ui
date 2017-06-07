@@ -38,9 +38,9 @@ class MeetingDatesAndTimes extends Component {
     render(){
         return(
             <Row>
-                {console.log("DatesAndTimes:", this.props.datesAndTimes)}
                 <Col xs={12} sm={12} md={12} lg={12}>
                     <h4>Choose possible dates and times for your meeting:</h4>
+                    { this.props.showStartTimeGreaterOrEqualThanEndTimeErrorMessage && <StartTimeGreaterOrEqualThanEndTimeErrorMessage/> }
                     { this.props.showAtLeastOneDateAndTimeErrorMessage && <AtLeastOneDateAndTimeErrorMessage/>}
                     {
                         this.getDatesAndTimes().map((dateObject, index) => {
@@ -50,6 +50,7 @@ class MeetingDatesAndTimes extends Component {
                                         key={"date" + index} 
                                         className="mdt-dateTimePicker"
                                         placeholder="Start date and time"
+                                        min={new Date()}
                                         value={dateObject.startDate} 
                                         onChange={this.handleChangeStartDate.bind(null, index)}
                                     /> 
@@ -59,6 +60,7 @@ class MeetingDatesAndTimes extends Component {
                                         key={"start" + index} 
                                         className="mdt-dateTimePicker"
                                         placeholder="End date and time"
+                                        min={new Date()}
                                         value={dateObject.endDate} 
                                         onChange={this.handleChangeEndDate.bind(null, index)}
                                     />
@@ -89,6 +91,10 @@ class MeetingDatesAndTimes extends Component {
 
 function AtLeastOneDateAndTimeErrorMessage(props){
     return <Alert bsStyle="danger">Please submit at least one starting and ending date and time for your meeting.</Alert>;
+}
+
+function StartTimeGreaterOrEqualThanEndTimeErrorMessage(props){
+    return <Alert bsStyle="danger">Starting date and time must be earlier than ending date and time.</Alert>;
 }
 
 module.exports = MeetingDatesAndTimes;

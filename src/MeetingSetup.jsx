@@ -32,6 +32,7 @@ class MeetingSetup extends Component {
             showAtLeastOneEmailInvitationErrorMessage: false,
             showAtLeastOneDateAndTimeErrorMessage: false,
             showFillInAllRequiredFieldsErrorMessage: false,
+            showStartTimeGreaterOrEqualThanEndTimeErrorMessage: false,
             errorsOnMeetingDescription: false,
             errorsOnMeetingInvitations: false
             // end flags section
@@ -84,9 +85,20 @@ class MeetingSetup extends Component {
      * @param {number} endDate - numeric value corresponding to the time for the specified date
      * */
     changeDateAndTime(index, startDate, endDate){
-        if(startDate) this.state.datesAndTimes[index].startDate = startDate;
-        if(endDate) this.state.datesAndTimes[index].endDate = endDate;
-        this.setState({datesAndTimes: this.state.datesAndTimes});
+        let tempDatesAndTimes = this.state.datesAndTimes;
+        if(startDate) tempDatesAndTimes[index].startDate = startDate;
+        if(endDate) tempDatesAndTimes[index].endDate = endDate;
+        if(tempDatesAndTimes[index].startDate && tempDatesAndTimes[index].endDate && tempDatesAndTimes[index].startDate >= tempDatesAndTimes[index].endDate){
+            this.setState({
+                datesAndTimes: tempDatesAndTimes,
+                showStartTimeGreaterOrEqualThanEndTimeErrorMessage: true
+            });
+        } else {
+            this.setState({
+                datesAndTimes: tempDatesAndTimes,
+                showStartTimeGreaterOrEqualThanEndTimeErrorMessage: false
+            });
+        }
     }
 
     /*
@@ -95,7 +107,6 @@ class MeetingSetup extends Component {
      * */
     deleteDateAndTime(index){
         let newDatesAndTimes = this.state.datesAndTimes.filter((element, elementIndex)=>{ return elementIndex !== index; });
-        console.log("newDatesAndTimes:", newDatesAndTimes);
         this.setState({datesAndTimes: newDatesAndTimes});
     }
 
@@ -170,7 +181,7 @@ class MeetingSetup extends Component {
 
             this.setState({showAtLeastOneDateAndTimeErrorMessage: !atLeastOneDateAndTime}); 
 
-            if(!atLeastOneDateAndTime){
+            if(!atLeastOneDateAndTime || this.state.showStartTimeGreaterOrEqualThanEndTimeErrorMessage){
                 return;
             }
 
@@ -288,6 +299,7 @@ class MeetingSetup extends Component {
 
                 { this.state.showMeetingDatesAndTimes && <MeetingDatesAndTimes 
                     showAtLeastOneDateAndTimeErrorMessage={this.state.showAtLeastOneDateAndTimeErrorMessage}
+                    showStartTimeGreaterOrEqualThanEndTimeErrorMessage={this.state.showStartTimeGreaterOrEqualThanEndTimeErrorMessage}
                     addDateAndTime={this.addDateAndTime} 
                     deleteDateAndTime={this.deleteDateAndTime} 
                     changeDateAndTime={this.changeDateAndTime} 
