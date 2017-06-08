@@ -261,7 +261,7 @@ class MeetingSetup extends Component {
                 this.props.history.replace('/endMeetingSetup');
             })
             .catch((err)=>{
-                console.log('create-meeting err:', err);
+                console.log(err);
                 this.props.handleError();
             });
     }
