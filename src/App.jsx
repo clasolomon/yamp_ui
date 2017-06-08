@@ -11,7 +11,7 @@ import Header from './header';
 import Login from './Login';
 import MeetingSetup from './MeetingSetup';
 import Register from './Register';
-import Start from './Start';
+import Start from './start';
 import MeetingSetupEnd from './MeetingSetupEnd';
 import Meeting from './Meeting';
 
