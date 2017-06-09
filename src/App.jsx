@@ -14,6 +14,7 @@ import Register from './Register';
 import Start from './start';
 import MeetingSetupEnd from './MeetingSetupEnd';
 import Meeting from './Meeting';
+import axios from './axios-instance';
 
 import './App.css';
 import 'react-widgets/dist/css/react-widgets.css';
@@ -31,10 +32,17 @@ class App extends Component {
     }
 
     handleLogout(){
-        this.setState({
-            loggedUser: undefined
-        });
-        this.props.history.replace({pathname: '/'});
+        axios.get('/logout')
+            .then((response)=>{
+                this.setState({
+                    loggedUser: undefined
+                });
+                this.props.history.replace({pathname: '/'});
+            })
+            .catch((err)=>{
+                console.log(err);
+                this.props.handleError();
+            });
     }
 
     handleError(){
