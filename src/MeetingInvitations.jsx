@@ -10,8 +10,8 @@ class MeetingInvitations extends Component {
         this.performValidation = this.performValidation.bind(this);
     }
 
-    performValidation(targetName, schemaName, event){
-        return this.props.validate(targetName, schemaName, event).then(()=>{
+    performValidation(schemaName, event){
+        return this.props.validate(schemaName, event).then(()=>{
             if(Object.keys(this.props.errors).length > 0){
                 this.props.setErrorsOnMeetingInvitations(true);
             } else {
@@ -43,7 +43,7 @@ class MeetingInvitations extends Component {
                                                 name={"mifc" + index}
                                                 value={element} 
                                                 data-tip={this.props.errors["mifc" + index] || ''}
-                                                onBlur={this.performValidation.bind(null, "valid email", "valid_email")} 
+                                                onBlur={this.performValidation.bind(null, "valid_email")} 
                                                 onChange={this.props.changeEmailInvitation.bind(null, index)}/>
                                             <FormControl.Feedback />
                                         </InputGroup>

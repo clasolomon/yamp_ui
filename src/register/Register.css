@@ -1,0 +1,13 @@
+.register{
+    margin: auto;
+    width: 35%;
+    text-align: center;
+}
+
+.errorMessage{
+    text-align: left;
+}
+
+.register-form{
+    text-align: left;
+}

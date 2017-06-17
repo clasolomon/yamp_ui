@@ -15,8 +15,8 @@ class MeetingSetup extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user_name: '',
-            user_email: '',
+            user_name: props.loggedUser ? props.loggedUser.name : '',
+            user_email: props.loggedUser ? props.loggedUser.email : '',
             meeting_name: '',
             meeting_description: '',
             datesAndTimes: [{}, {}, {}], // holds objects describing the dates and times of meetings
@@ -248,22 +248,51 @@ class MeetingSetup extends Component {
         }
 
         let newMeeting = {
-            user_name: this.state.user_name,
-            user_email: this.state.user_email,
-            meeting_name: this.state.meeting_name,
-            meeting_description: this.state.meeting_description,
-            datesAndTimes: this.state.datesAndTimes.filter((element) => Object.keys(element).length>0), 
-            inviteEmails: this.state.inviteEmails.filter((element) => element!='')
+            meetingName: this.state.meeting_name,
+            meetingDescription: this.state.meeting_description,
+            initiatedBy: this.props.loggedUser ? this.props.loggedUser.id : '',
+            proposedDatesAndTimes: this.state.datesAndTimes.filter((element) => Object.keys(element).length>0)
         };
 
-        axios.post('/create-meeting', newMeeting)
-            .then((response)=>{
-                this.props.history.replace('/endMeetingSetup');
-            })
-            .catch((err)=>{
-                console.log(err);
-                this.props.handleError();
-            });
+        if(this.props.loggedUser){
+            axios.post('/meetings', newMeeting)
+                .then(
+                    (response)=>{
+                        this.props.history.replace('/endMeetingSetup');
+                        return response.data.meetingId;
+                    }
+                )
+                .then(
+                    (meetingId)=>{
+                        let inviteEmails = this.state.inviteEmails.filter((element) => element!=='');
+                        inviteEmails.map(
+                            (email)=>{
+                                let newInvitation = {
+                                    acceptedDatesAndTimes: JSON.stringify(new Array(newMeeting.proposedDatesAndTimes.length)),
+                                    meetingId: meetingId,
+                                    attendantEmail: email
+                                };
+                                axios.post('/invitations', newInvitation)
+                                    .catch((err)=>{
+                                        console.log(err);
+                                        this.props.handleError();
+                                    });
+                            }
+                        );
+                    }
+                )
+                .catch(
+                    (err)=>{
+                        console.log(err);
+                        this.props.handleError();
+                    }
+                );
+        }
+
+        // if user is NOT logged in
+        if(!this.props.loggedUser){
+
+        }
     }
 
     /*

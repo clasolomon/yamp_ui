@@ -20,7 +20,7 @@ function applyValidation(ComponentWithoutValidation, schema){
             return schema[name];
         }
 
-        validate(targetName, schemaName, event){
+        validate(schemaName, event){
             let errorKey = event.target.name;
             let schema = this.getSchema(schemaName);
 

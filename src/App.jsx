@@ -8,9 +8,9 @@ import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import ErrorView from './ErrorView';
 import Footer from './Footer';
 import Header from './header';
-import Login from './Login';
+import Login from './login';
 import MeetingSetup from './MeetingSetup';
-import Register from './Register';
+import Register from './register';
 import Start from './start';
 import MeetingSetupEnd from './MeetingSetupEnd';
 import Meeting from './Meeting';
@@ -60,6 +60,7 @@ class App extends Component {
             if(nextProps.location.state.email){
                 this.setState({
                     loggedUser: {
+                        id: nextProps.location.state.userId,
                         name: nextProps.location.state.username,
                         email: nextProps.location.state.email
                     }

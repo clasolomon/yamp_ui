@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
 import { Alert, Button, Image, Panel } from 'react-bootstrap';
 import { Form, FormControl, FormGroup, InputGroup } from 'react-bootstrap';
-import axios from './axios-instance';
+import axios from '../axios-instance';
+import './Login.css';
 
 class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showMessageWrongEmailOrPassword: false,
+            showErrorMessageWrongEmailOrPassword: false,
             showMessageAfterRegistration: false,
-            showMessageAlreadyRegistered: false,
             email: '',
             password: ''
         }
@@ -28,16 +28,20 @@ class Login extends Component {
     }
 
     handleLoginClick(event){
+        // return if email or password are missing
+        if(!this.state.email || !this.state.password){
+            return;
+        }
+
         axios.post('/login', {email: this.state.email, password: this.state.password})
             .then((response)=>{
-                this.props.history.push({pathname:'/', state:{username: response.data.user_name, email: response.data.email}}); 
+                this.props.history.push({pathname:'/', state:{userId: response.data.user_id, username: response.data.user_name, email: response.data.email}}); 
             })
             .catch((err)=>{
                 if(err.response && err.response.status === 401){ // if unauthorized
                     this.setState({
-                        showMessageWrongEmailOrPassword: true,
-                        showMessageAfterRegistration: false,
-                        showMessageAlreadyRegistered: false
+                        showErrorMessageWrongEmailOrPassword: true,
+                        showMessageAfterRegistration: false
                     });
                     return;
                 }
@@ -62,8 +66,7 @@ class Login extends Component {
                 <LoginMessage/>
                 <br/>
                 { this.state.showMessageAfterRegistration && <RegistrationMessage/>}
-                { this.state.showMessageAlreadyRegistered && <AlreadyRegisteredMessage/> }
-                { this.state.showMessageWrongEmailOrPassword && <WrongEmailOrPassword/>}
+                { this.state.showErrorMessageWrongEmailOrPassword && <WrongEmailOrPasswordErrorMessage/>}
                 <Form>
                     <InputGroup>
                         <InputGroup.Addon>
@@ -90,7 +93,7 @@ class Login extends Component {
     }
 }
 
-function WrongEmailOrPassword(props){
+function WrongEmailOrPasswordErrorMessage(props){
     return <Alert bsStyle="danger">Wrong email or password</Alert>;
 }
 
@@ -102,9 +105,4 @@ function RegistrationMessage(props) {
     return <Alert><h4>Your account has been created!</h4></Alert>;
 }
 
-function AlreadyRegisteredMessage(props) {
-    return <Alert><h4>An account already exists with this email!</h4></Alert>;
-}
-
 export default Login;
-

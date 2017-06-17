@@ -14,7 +14,6 @@ class Meeting extends Component {
             meetingName: '',
             meetingDescription: '',
             meetingProposedDatesAndTimes: [],
-            meetingInvitationEmails: [],
             attendantsAcceptedDatesAndTimes: {}
         }
 
@@ -25,32 +24,54 @@ class Meeting extends Component {
     componentWillMount(){
         let newState = {};
 
-        axios.get('/nonMemberMeeting/' + this.props.match.params.invitation_id)
-            .then((response)=>{
-                console.log(response.data);
+        axios.get('/invitations/' + this.props.match.params.invitation_id)
+            .then(
+                (response)=>{
+                    newState.invitationId = response.data.invitation_id;
+                    newState.attendantEmail = response.data.attendant_email;
+                    newState.meetingId = response.data.meeting_id;
+                    return newState.meetingId;
+                }
+            )
+            .then(
+                (meeting_id)=>{
+                    return axios.get('/invitations?meeting_id=' + meeting_id)
+                        .then(
+                            (response)=>{
+                                let acceptedDatesAndTimes = {};
+                                for(let i=0; i<response.data.length; i++){
+                                    acceptedDatesAndTimes[response.data[i].attendant_email] = JSON.parse(response.data[i].accepted_dates_and_times);
+                                }
+                                newState.attendantsAcceptedDatesAndTimes = acceptedDatesAndTimes;
+                            }
+                        )
+                        .then(
+                            ()=>{
+                                return axios.get('/meetings/' + meeting_id)
+                                    .then(
+                                        (response)=>{
+                                            newState.meetingName = response.data.meeting_name;
+                                            newState.meetingDescription = response.data.meeting_description;
+                                            newState.meetingProposedDatesAndTimes = JSON.parse(response.data.proposed_dates_and_times);
 
-                newState.meetingId = response.data.meeting_id;
-                newState.invitationId = response.data.invitation_id;
-                newState.attendantEmail = response.data.atendant_email;
-                newState.meetingAdmin = response.data.user_name;
-                newState.meetingAdminEmail = response.data.user_email;
-                newState.meetingName = response.data.meeting_name;
-                newState.meetingDescription = response.data.meeting_description;
-                newState.meetingProposedDatesAndTimes = JSON.parse(response.data.proposed_dates_and_times);
-                newState.meetingInvitationEmails = JSON.parse(response.data.invite_emails);
-
-            })
-            .then(()=>{
-                return axios.get('/nonMemberAcceptedDatesAndTimes/' + newState.meetingId)
-                    .then((response)=>{
-                        console.log("accepted dates and times:", response.data);
-                        let acceptedDatesAndTimes = {};
-                        for(let i=0; i<response.data.length; i++){
-                            acceptedDatesAndTimes[response.data[i].atendant_email] = JSON.parse(response.data[i].accepted_dates_and_times);
-                        }
-                        newState.attendantsAcceptedDatesAndTimes = acceptedDatesAndTimes;
-                    });
-            })
+                                            return response.data.initiated_by;
+                                        }
+                                    );
+                            }
+                        )
+                }
+            )
+            .then(
+                (user_id)=>{
+                    return axios.get('/users/' + user_id)
+                        .then(
+                            (response)=>{
+                                newState.meetingAdmin = response.data.user_name;
+                                newState.meetingAdminEmail = response.data.email;
+                            }
+                        );
+                }
+            )
             .then(()=>{
                 console.log('new state:', newState);
                 this.setState(newState);
@@ -62,7 +83,7 @@ class Meeting extends Component {
     }
 
     handleSubmitClick(event){
-        axios.post('/submitAcceptedDatesAndTimes', {invitation_id: this.state.invitationId, accepted_dates_and_times: this.state.attendantsAcceptedDatesAndTimes[this.state.attendantEmail]})
+        axios.put('/invitations/' + this.state.invitationId, {acceptedDatesAndTimes: this.state.attendantsAcceptedDatesAndTimes[this.state.attendantEmail]})
             .then((response)=>{
                 this.props.history.replace({pathname:'/'}); 
             })
@@ -154,9 +175,9 @@ function OtherAttendant(props){
                             })()
                         }
                     </td>
-                    ) 
-                    }
-                </tr>
+                ) 
+            }
+        </tr>
     );
 }
 

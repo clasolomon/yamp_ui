@@ -9,8 +9,8 @@ class MeetingDescription extends Component {
         this.performValidation = this.performValidation.bind(this);
     }
 
-    performValidation(targetName, schemaName, event){
-        return this.props.validate(targetName, schemaName, event).then(()=>{
+    performValidation(schemaName, event){
+        return this.props.validate(schemaName, event).then(()=>{
             if(Object.keys(this.props.errors).length > 0){
                 this.props.setErrorsOnMeetingDescription(true);
             } else {
@@ -61,7 +61,7 @@ class MeetingDescription extends Component {
                             placeholder="User email" 
                             value={this.props.user_email} 
                             data-tip={this.props.errors.user_email || ''}
-                            onBlur={this.performValidation.bind(null, "user email", "valid_email")} 
+                            onBlur={this.performValidation.bind(null, "valid_email")} 
                             onChange={this.props.handleInputChange}/>
                     </FormGroup>
                 </Col>

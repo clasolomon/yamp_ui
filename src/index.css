@@ -12,22 +12,6 @@ body {
     transform: translate(-50%, -50%) !important;
 }
 
-.login{
-    margin: auto;
-    width: 35%;
-    text-align: center;
-}
-
-.register{
-    margin: auto;
-    width: 35%;
-    text-align: center;
-}
-
-.register-form{
-    text-align: left;
-}
-
 .footer{
     position: fixed;
     bottom: 0;
