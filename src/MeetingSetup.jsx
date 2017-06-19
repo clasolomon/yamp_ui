@@ -247,14 +247,14 @@ class MeetingSetup extends Component {
             return; 
         }
 
-        let newMeeting = {
-            meetingName: this.state.meeting_name,
-            meetingDescription: this.state.meeting_description,
-            initiatedBy: this.props.loggedUser ? this.props.loggedUser.id : '',
-            proposedDatesAndTimes: this.state.datesAndTimes.filter((element) => Object.keys(element).length>0)
-        };
-
         if(this.props.loggedUser){
+            let newMeeting = {
+                meetingName: this.state.meeting_name,
+                meetingDescription: this.state.meeting_description,
+                initiatedBy: this.props.loggedUser ? this.props.loggedUser.id : '',
+                proposedDatesAndTimes: this.state.datesAndTimes.filter((element) => Object.keys(element).length>0)
+            };
+
             axios.post('/meetings', newMeeting)
                 .then(
                     (response)=>{
@@ -273,10 +273,12 @@ class MeetingSetup extends Component {
                                     attendantEmail: email
                                 };
                                 axios.post('/invitations', newInvitation)
-                                    .catch((err)=>{
-                                        console.log(err);
-                                        this.props.handleError();
-                                    });
+                                    .catch(
+                                        (err)=>{
+                                            console.log(err);
+                                            this.props.handleError();
+                                        }
+                                    );
                             }
                         );
                     }
@@ -291,7 +293,48 @@ class MeetingSetup extends Component {
 
         // if user is NOT logged in
         if(!this.props.loggedUser){
+            let newMeeting = {
+                meetingName: this.state.meeting_name,
+                meetingDescription: this.state.meeting_description,
+                username: this.state.user_name,
+                userEmail: this.state.user_email,
+                proposedDatesAndTimes: this.state.datesAndTimes.filter((element) => Object.keys(element).length>0)
+            };
 
+            axios.post('/nonMemberMeetings', newMeeting)
+                .then(
+                    (response)=>{
+                        this.props.history.replace('/endMeetingSetup');
+                        return response.data.meetingId;
+                    }
+                )
+                .then(
+                    (meetingId)=>{
+                        let inviteEmails = this.state.inviteEmails.filter((element) => element!=='');
+                        inviteEmails.map(
+                            (email)=>{
+                                let newInvitation = {
+                                    acceptedDatesAndTimes: JSON.stringify(new Array(newMeeting.proposedDatesAndTimes.length)),
+                                    meetingId: meetingId,
+                                    attendantEmail: email
+                                };
+                                axios.post('/nonMemberInvitations', newInvitation)
+                                    .catch(
+                                        (err)=>{
+                                            console.log(err);
+                                            this.props.handleError();
+                                        }
+                                    );
+                            }
+                        );
+                    }
+                )
+                .catch(
+                    (err)=>{
+                        console.log(err);
+                        this.props.handleError();
+                    }
+                );
         }
     }
 

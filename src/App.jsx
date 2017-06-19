@@ -90,6 +90,7 @@ class App extends Component {
                         <Route path="/meetingSetup" render={(props)=>(<MeetingSetup {...props} loggedUser={this.state.loggedUser} handleError={this.handleError}/>)}/>
                         <Route path="/endMeetingSetup" render={(props)=>(<MeetingSetupEnd {...props} loggedUser={this.state.loggedUser}/>)}/>
                         <Route path="/meeting-invitation/:invitation_id" render={(props)=>(<Meeting {...props} handleError={this.handleError}/>)}/>
+                        <Route path="/non-member-invitation/:invitation_id" render={(props)=>(<Meeting {...props} handleError={this.handleError} nonMember={true}/>)}/>
                         {this.state.errorOccured && <ErrorView className="errorView" history={this.props.history}/>}
                     </Col>
                 </Row>
