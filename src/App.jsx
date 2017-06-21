@@ -8,6 +8,7 @@ import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import ErrorView from './ErrorView';
 import Footer from './Footer';
 import Header from './header';
+import Member from './member';
 import Login from './login';
 import MeetingSetup from './MeetingSetup';
 import Register from './register';
@@ -86,6 +87,7 @@ class App extends Component {
                     <Col xs={12} sm={12} md={12} lg={12}>
                         <Route exact path="/" render={(props)=>(<Start {...props} loggedUser={this.state.loggedUser}/>)}/>
                         <Route path="/login" render={(props)=>(<Login {...props} handleError={this.handleError}/>)}/>
+                        <Route path="/member" render={(props)=>(<Member {...props} loggedUser={this.state.loggedUser} handleError={this.handleError}/>)}/>
                         <Route path="/register" render={(props)=>(<Register {...props} handleError={this.handleError}/>)}/>
                         <Route path="/meetingSetup" render={(props)=>(<MeetingSetup {...props} loggedUser={this.state.loggedUser} handleError={this.handleError}/>)}/>
                         <Route path="/endMeetingSetup" render={(props)=>(<MeetingSetupEnd {...props} loggedUser={this.state.loggedUser}/>)}/>

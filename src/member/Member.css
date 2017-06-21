@@ -1,0 +1,23 @@
+.listGroupItem{
+    outline: none;
+}
+
+.pagination{
+    margin: 0px;
+}
+
+.listGroupHeader{
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+button.listGroupItemPlanMeeting{
+    text-align: center;
+    margin-top: 5px;
+}
+
+.pager{
+    margin: auto;
+    text-align: center;
+}
+

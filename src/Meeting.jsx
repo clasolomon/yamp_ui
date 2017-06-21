@@ -195,16 +195,19 @@ class Meeting extends Component {
                     <tbody>
                         <CurrentAttendant attendantEmail={this.state.attendantEmail} attendantsAcceptedDatesAndTimes={this.state.attendantsAcceptedDatesAndTimes} handleCheckboxChange={this.handleCheckboxChange}/>
                         {
-                            Object.keys(this.state.attendantsAcceptedDatesAndTimes).filter(email => email != this.state.attendantEmail).map((email, index) =>
-                                <OtherAttendant key={'oa' + index} index={index} attendantEmail={email} attendantsAcceptedDatesAndTimes={this.state.attendantsAcceptedDatesAndTimes}/>
-                                )
-                                }
-                            </tbody>
-                        </Table>
-                        <FormGroup>
-                            <Button bsStyle="primary" onClick={this.handleSubmitClick}>Submit</Button>
-                        </FormGroup>
-                    </Panel>
+                            Object.keys(this.state.attendantsAcceptedDatesAndTimes)
+                                .filter(email => email != this.state.attendantEmail)
+                                .map(
+                                    (email, index) =>
+                                    <OtherAttendant key={'oa' + index} index={index} attendantEmail={email} attendantsAcceptedDatesAndTimes={this.state.attendantsAcceptedDatesAndTimes}/>
+                                    )
+                                    }
+                                </tbody>
+                            </Table>
+                            <FormGroup>
+                                <Button bsStyle="primary" onClick={this.handleSubmitClick}>Submit</Button>
+                            </FormGroup>
+                        </Panel>
         );
     }
 }
