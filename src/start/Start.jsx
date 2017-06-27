@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Panel, FormGroup} from 'react-bootstrap';
 import './Start.css';
+import axios from 'axios';
 
 class Start extends Component {
     constructor(props){
@@ -21,7 +22,7 @@ class Start extends Component {
         return (
             <span>
                 { this.props.loggedUser && <MemberStartPanel {...this.props}  handleManageMeetingsClick={this.handleManageMeetingsClick} handlePlanMeetingClick={this.handlePlanMeetingClick}/> }
-                { !this.props.loggedUser && <NonMemberStartPanel/> }
+                { !this.props.loggedUser && <NonMemberStartPanel handlePlanMeetingClick={this.handlePlanMeetingClick}/> }
             </span>
         );
     }
