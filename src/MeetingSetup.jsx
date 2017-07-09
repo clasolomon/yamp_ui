@@ -22,13 +22,7 @@ class MeetingSetup extends Component {
             datesAndTimes: [{}, {}, {}], // holds objects describing the dates and times of meetings
             inviteEmails: ['', '', ''], // holds the emails of the participants
             page: 0, // holds the page index
-            // flags for conditional rendering of components
-            showMeetingDescription: true,
-            showMeetingDatesAndTimes: false,
-            showMeetingInvitations: false,
-            showNextButton: true, 
-            showPreviousButton: false,
-            showSubmitButton: false,
+            // flags for error messages 
             showAtLeastOneEmailInvitationErrorMessage: false,
             showAtLeastOneDateAndTimeErrorMessage: false,
             showFillInAllRequiredFieldsErrorMessage: false,
@@ -162,10 +156,6 @@ class MeetingSetup extends Component {
 
             this.setState({
                 page: 1,
-                showMeetingDescription: false,
-                showMeetingDatesAndTimes: true,
-                showNextButton: true, 
-                showPreviousButton: true
             });
         }
 
@@ -187,11 +177,6 @@ class MeetingSetup extends Component {
 
             this.setState({
                 page: 2,
-                showMeetingDatesAndTimes: false,
-                showMeetingInvitations: true,
-                showNextButton: false, 
-                showPreviousButton: true,
-                showSubmitButton: true
             });
         }
     }
@@ -204,19 +189,10 @@ class MeetingSetup extends Component {
         if(this.state.page === 2){
             this.setState({
                 page: 1,
-                showMeetingDatesAndTimes: true,
-                showMeetingInvitations: false,
-                showNextButton: true, 
-                showPreviousButton: true,
-                showSubmitButton: false
             });
         } else if(this.state.page === 1){
             this.setState({
                 page: 0,
-                showMeetingDescription: true,
-                showMeetingDatesAndTimes: false,
-                showNextButton: true, 
-                showPreviousButton: false
             });
         }
     }
@@ -259,7 +235,7 @@ class MeetingSetup extends Component {
                 .then(
                     (response)=>{
                         this.props.history.replace('/endMeetingSetup');
-                        return response.data.meetingId;
+                        return response.data.meeting_id;
                     }
                 )
                 .then(
@@ -354,57 +330,120 @@ class MeetingSetup extends Component {
         this.setState({errorsOnMeetingInvitations: hasError});
     }
 
-    /*
-     * Render the component.
-     * */
-    render(){
-        return(
-            <Grid className="meetingSetup">
-                { this.state.showMeetingDescription && <MeetingDescription 
+    renderMeetingDescription(){
+        if(this.state.page === 0){
+            return(
+                <MeetingDescription 
                     handleInputChange={this.handleInputChange} 
                     showFillInAllRequiredFieldsErrorMessage={this.state.showFillInAllRequiredFieldsErrorMessage}
                     setErrorsOnMeetingDescription={this.setErrorsOnMeetingDescription}
                     meeting_name={this.state.meeting_name} 
                     meeting_description={this.state.meeting_description} 
                     user_name={this.state.user_name} 
-                    user_email={this.state.user_email}/> }
+                    user_email={this.state.user_email}
+                />
+            );
+        }
+        return null;
+    }
 
-                { this.state.showMeetingDatesAndTimes && <MeetingDatesAndTimes 
+    renderMeetingDatesAndTimes(){
+        if(this.state.page === 1){
+            return(
+                <MeetingDatesAndTimes 
                     showAtLeastOneDateAndTimeErrorMessage={this.state.showAtLeastOneDateAndTimeErrorMessage}
                     showStartTimeGreaterOrEqualThanEndTimeErrorMessage={this.state.showStartTimeGreaterOrEqualThanEndTimeErrorMessage}
                     addDateAndTime={this.addDateAndTime} 
                     deleteDateAndTime={this.deleteDateAndTime} 
                     changeDateAndTime={this.changeDateAndTime} 
-                    datesAndTimes={this.state.datesAndTimes}/> }
+                    datesAndTimes={this.state.datesAndTimes}
+                />
+            );
+        }
+        return null;
+    }
 
-                { this.state.showMeetingInvitations && <MeetingInvitations 
+    renderMeetingInvitations(){
+        if(this.state.page === 2){
+            return(
+                <MeetingInvitations 
                     showAtLeastOneEmailInvitationErrorMessage={this.state.showAtLeastOneEmailInvitationErrorMessage} 
                     setErrorsOnMeetingInvitations={this.setErrorsOnMeetingInvitations}
                     addEmailInvitation={this.addEmailInvitation} 
                     changeEmailInvitation={this.changeEmailInvitation}
                     deleteEmailInvitation={this.deleteEmailInvitation} 
-                    inviteEmails={this.state.inviteEmails}/> }
+                    inviteEmails={this.state.inviteEmails}
+                />
+            );
+        }
+        return null;
+    }
 
+    renderPreviousButton(){
+        if(this.state.page > 0){
+            return(
+                <Button 
+                    id="meetingSetup-previous" 
+                    bsStyle="primary" 
+                    bsSize="small" 
+                    onClick={this.handlePreviousClick}
+                > 
+                    Previous 
+                </Button>
+            );
+        }
+        return null;
+    }
+
+    renderNextButton(){
+        if(this.state.page < 2){
+            return(
+                <Button 
+                    id="meetingSetup-next" 
+                    bsStyle="primary" 
+                    bsSize="small" 
+                    onClick={this.handleNextClick}
+                > 
+                    Next 
+                </Button>
+            );
+        }
+        return null;
+    }
+
+    renderSubmitButton(){
+        if(this.state.page === 2){
+            return(
+                <Button 
+                    id="meetingSetup-submit" 
+                    bsStyle="primary" 
+                    bsSize="small" 
+                    onClick={this.handleSubmit}
+                > 
+                    Submit 
+                </Button>
+            );
+        }
+        return null;
+    }
+
+    /*
+     * Render the component.
+     * */
+    render(){
+        return(
+            <Grid className="meetingSetup">
+                { this.renderMeetingDescription() } 
+                { this.renderMeetingDatesAndTimes() } 
+                { this.renderMeetingInvitations() } 
                 <Row>
                     <Col xs={12} sm={12} md={12} lg={12}>
                         <br/>
-                        { this.state.showPreviousButton && <Button 
-                            id="meetingSetup-previous" 
-                            bsStyle="primary" 
-                            bsSize="small" 
-                            onClick={this.handlePreviousClick}> Previous </Button> }
+                        { this.renderPreviousButton() }
                         {' '}
-                        { this.state.showNextButton && <Button 
-                            id="meetingSetup-next" 
-                            bsStyle="primary" 
-                            bsSize="small" 
-                            onClick={this.handleNextClick}> Next </Button> }
+                        { this.renderNextButton() }
                         {' '}
-                        { this.state.showSubmitButton && <Button 
-                            id="meetingSetup-submit" 
-                            bsStyle="primary" 
-                            bsSize="small" 
-                            onClick={this.handleSubmit}> Submit </Button> }
+                        { this.renderSubmitButton() }
                     </Col>
                 </Row>
             </Grid>

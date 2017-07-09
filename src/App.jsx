@@ -80,7 +80,7 @@ class App extends Component {
             <Grid>
                 <Row>
                     <Col xs={12} sm={12} md={12} lg={12}>
-                        <Route path="/" render={(props)=>(<Header {...props} loggedUser={this.state.loggedUser} handleLogout={this.handleLogout}/>)}/> 
+                        <Route path="/" render={(props)=>(<Header history={this.props.history} loggedUser={this.state.loggedUser} handleLogout={this.handleLogout}/>)}/> 
                     </Col>
                 </Row>
                 <Row>
