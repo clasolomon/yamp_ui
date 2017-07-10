@@ -101,14 +101,19 @@ class Register extends Component {
                             return axios.get('/users?email=' + email)
                                 .then(
                                     (response)=>{
-                                        console.log('get user by email:', response);
                                         if(response.data.email){
                                             this.setState({ showErrorMessageAlreadyUsedEmail: true });
-                                        } else {
-                                            this.setState({ showErrorMessageAlreadyUsedEmail: false });
                                         }
                                     }
                                 )
+                                .catch(
+                                    (err)=>{
+                                        if(err.response.data.code === 'NotFoundError'){
+                                            this.setState({ showErrorMessageAlreadyUsedEmail: false });
+                                        }
+                                        return;
+                                    }
+                                );
                         }
                     }
                 }

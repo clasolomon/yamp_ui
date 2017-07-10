@@ -244,7 +244,7 @@ class MeetingSetup extends Component {
                         inviteEmails.map(
                             (email)=>{
                                 let newInvitation = {
-                                    acceptedDatesAndTimes: JSON.stringify(new Array(newMeeting.proposedDatesAndTimes.length)),
+                                    acceptedDatesAndTimes: new Array(newMeeting.proposedDatesAndTimes.length),
                                     meetingId: meetingId,
                                     attendantEmail: email
                                 };

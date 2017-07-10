@@ -115,7 +115,7 @@ class Header extends Component {
 
 Header.propTypes = {
     history: PropTypes.object,
-    loggerUser: PropTypes.object,
+    loggedUser: PropTypes.object,
     handleLogout: PropTypes.func
 }
 
