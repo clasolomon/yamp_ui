@@ -38,6 +38,54 @@ class Header extends Component {
         return null;
     }
 
+    renderLoginHeaderMessage(){
+        if(this.props.history.location.pathname === '/register' && !this.props.loggedUser){
+            return (
+                <LoginHeaderMessage/>
+            );
+        }
+        return null;
+    }
+
+    renderRegisterHeaderMessage(){
+        if(this.props.history.location.pathname === '/login' && !this.props.loggedUser){
+            return (
+                <RegisterHeaderMessage/>
+            );
+        }
+        return null;
+    }
+
+    renderLoginButton(){
+        if(this.props.history.location.pathname !== '/login' && !this.props.loggedUser){
+            return (
+                <Button 
+                    bsStyle="primary" 
+                    className={this.getClassNameForLogin()} 
+                    onClick={this.handleLoginClick}
+                >
+                    Log in
+                </Button>
+            );
+        }
+        return null;
+    }
+
+    renderRegisterButton(){
+        if(this.props.history.location.pathname !== '/register' && !this.props.loggedUser){
+            return (
+                <Button 
+                    bsStyle="primary" 
+                    className="forLoginAndRegister" 
+                    onClick={this.handleRegisterClick}
+                >
+                    Register
+                </Button>
+            );
+        }
+        return null;
+    }
+
     render() {
         return (
             <PageHeader>
@@ -50,12 +98,12 @@ class Header extends Component {
                             <LogoMessage/>
                         </Col>
                         <Col className="header-buttons"  xs={7} sm={7} md={7} lg={7}>
-                            { this.props.history.location.pathname === '/register' && !this.props.loggedUser && <LoginHeaderMessage/> }
-                            { this.props.history.location.pathname === '/login' && !this.props.loggedUser && <RegisterHeaderMessage/> }
+                            { this.renderLoginHeaderMessage() }
+                            { this.renderRegisterHeaderMessage() }
                             {' '}
-                            { this.props.history.location.pathname !== '/login' && !this.props.loggedUser && <Button bsStyle="primary" className={this.getClassNameForLogin()} onClick={this.handleLoginClick}>Log in</Button> }
+                            { this.renderLoginButton() }
                             {' '}
-                            { this.props.history.location.pathname !== '/register' && !this.props.loggedUser && <Button bsStyle="primary" className="forLoginAndRegister" onClick={this.handleRegisterClick}>Register</Button> }
+                            { this.renderRegisterButton() }
                             { this.renderLoggedUserDropdownButton() }
                         </Col>
                     </Row>
@@ -72,23 +120,31 @@ Header.propTypes = {
 }
 
 function LoggedUserDropdownButton({loggedUser, handleLogout}){
-    return  (<DropdownButton bsStyle="primary" title={loggedUser.name} id="dropdown-size-medium">
-        <MenuItem eventKey="1">Settings</MenuItem>
-        <MenuItem divider />
-        <MenuItem eventKey="2" onClick={handleLogout}>Logout</MenuItem>
-    </DropdownButton>);
+    return  (
+        <DropdownButton bsStyle="primary" title={loggedUser.name} id="dropdown-size-medium">
+            <MenuItem eventKey="1">Settings</MenuItem>
+            <MenuItem divider />
+            <MenuItem eventKey="2" onClick={handleLogout}>Logout</MenuItem>
+        </DropdownButton>
+    );
 }
 
 function LogoMessage(){
-    return (<span className="header-text">Yet Another Meeting Planner</span>);
+    return (
+        <span className="header-text">Yet Another Meeting Planner</span>
+    );
 }
 
 function RegisterHeaderMessage(){
-    return (<span className="header-text">Already have an account?</span>);
+    return (
+        <span className="header-text">Already have an account?</span>
+    );
 }
 
 function LoginHeaderMessage(){
-    return (<span className="header-text">New to YAMP?</span>);
+    return (
+        <span className="header-text">New to YAMP?</span>
+    );
 }
 
 export default Header;
