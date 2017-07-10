@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Alert, Button, Image, Panel } from 'react-bootstrap';
 import { Form, FormControl, FormGroup, InputGroup } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 import axios from '../axios-instance';
 import './Login.css';
 
@@ -59,27 +60,59 @@ class Login extends Component {
         }
     }
 
+    renderRegistrationMessage(){
+        if(this.state.showMessageAfterRegistration){
+            return (
+                <RegistrationMessage/>
+            );
+        }
+        return null;
+    }
+
+    renderWrongEmailOrPasswordErrorMessage(){
+        if(this.state.showErrorMessageWrongEmailOrPassword){
+            return (
+                <WrongEmailOrPasswordErrorMessage/>
+            );
+        }
+        return null;
+    }
+
     render(){
         return (
             <Panel className="login">
                 <Image src="/yamp_logo.png"/>
                 <LoginMessage/>
                 <br/>
-                { this.state.showMessageAfterRegistration && <RegistrationMessage/>}
-                { this.state.showErrorMessageWrongEmailOrPassword && <WrongEmailOrPasswordErrorMessage/>}
+                { this.renderRegistrationMessage() }
+                { this.renderWrongEmailOrPasswordErrorMessage() }
                 <Form>
                     <InputGroup>
                         <InputGroup.Addon>
                             <i className="fa fa-envelope-o" aria-hidden="true"></i>
                         </InputGroup.Addon>
-                        <FormControl type="email" size="40" name="email" placeholder="Email address" value={this.state.email} onChange={this.handleInputChange}/>
+                        <FormControl 
+                            type="email" 
+                            size="40" 
+                            name="email" 
+                            placeholder="Email address" 
+                            value={this.state.email} 
+                            onChange={this.handleInputChange}
+                        />
                     </InputGroup>
                     <br/>
                     <InputGroup>
                         <InputGroup.Addon>
                             <i className="fa fa-key" aria-hidden="true"></i>
                         </InputGroup.Addon>
-                        <FormControl type="password" size="40" name="password" placeholder="Password" value={this.state.password} onChange={this.handleInputChange}/>
+                        <FormControl 
+                            type="password" 
+                            size="40" 
+                            name="password" 
+                            placeholder="Password" 
+                            value={this.state.password} 
+                            onChange={this.handleInputChange}
+                        />
                     </InputGroup>
                     <br/>
                     <FormGroup>
@@ -93,16 +126,29 @@ class Login extends Component {
     }
 }
 
+Login.propTypes = {
+    history: PropTypes.object,
+    match: PropTypes.object,
+    location: PropTypes.object,
+    handleError: PropTypes.func
+}
+
 function WrongEmailOrPasswordErrorMessage(props){
-    return <Alert bsStyle="danger">Wrong email or password</Alert>;
+    return (
+        <Alert bsStyle="danger">Wrong email or password</Alert>
+    );
 }
 
 function LoginMessage(props) {
-    return <h4>Log in to your account</h4>;
+    return (
+        <h4>Log in to your account</h4>
+    );
 }
 
 function RegistrationMessage(props) {
-    return <Alert><h4>Your account has been created!</h4></Alert>;
+    return (
+        <Alert><h4>Your account has been created!</h4></Alert>
+    );
 }
 
 export default Login;
