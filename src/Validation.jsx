@@ -1,45 +1,40 @@
 import React from 'react';
 import yup from 'yup';
 
-function applyValidation(ComponentWithoutValidation, schema){
+function applyValidation(Component, schema){
     return class extends React.Component{
         constructor(props){
             super(props);
             this.state = {
                 errors: {}
             };
-
             this.validate = this.validate.bind(this);
-            this.getSchema = this.getSchema.bind(this);
         }
 
-        getSchema(name){
-            const schema = {
-                valid_email: yup.string().email('Please provide valid email address!')
-            }
-            return schema[name];
-        }
+        validate(input){
+            let validationSchema = {};
+            Object.keys(input).forEach((field) => validationSchema[field] = schema[field]);
 
-        validate(schemaName, event){
-            let errorKey = event.target.name;
-            let schema = this.getSchema(schemaName);
-
-            return schema.validate(event.target.value)
-                .then((valid)=>{
-                    // remove the error if valid
-                    let newErrors = this.state.errors;
-                    delete newErrors[errorKey];
+            return yup.object().shape(validationSchema).validate(input, {abortEarly: false})
+                .then((valid) => {
+                    let newErrors = Object.assign({}, this.state.errors);
+                    Object.keys(input).forEach((field) => delete newErrors[field]);
                     this.setState({errors: newErrors});
                 })
-                .catch((err)=>{
-                    let newErrors = this.state.errors;
-                    newErrors[errorKey] = err.errors[0];
+                .catch((err) => {
+                    console.log('err:', err);
+                    let newErrors = Object.assign({}, this.state.errors);
+                    err.inner.forEach((validationError) => {
+                        newErrors[validationError.path] = validationError.message; 
+                        delete input[validationError.path];
+                    });
+                    Object.keys(input).forEach((field) => delete newErrors[field]);
                     this.setState({errors: newErrors});
                 });
         }
 
         render(){
-            return <ComponentWithoutValidation 
+            return <Component
                 {...this.props} 
                 errors={this.state.errors}
                 validate={this.validate}
