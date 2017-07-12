@@ -9,12 +9,12 @@ import ErrorView from './ErrorView';
 import Footer from './footer';
 import Header from './header';
 import Member from './member';
+import Meeting from './meeting';
 import Login from './login';
 import MeetingSetup from './MeetingSetup';
 import Register from './register';
 import Start from './start';
 import MeetingSetupEnd from './MeetingSetupEnd';
-import Meeting from './Meeting';
 import axios from './axios-instance';
 
 import './App.css';
