@@ -12,12 +12,6 @@ body {
     transform: translate(-50%, -50%) !important;
 }
 
-.footer{
-    position: fixed;
-    bottom: 0;
-    text-align: center;
-}
-
 .meetingSetup {
     width: 700px;
 }

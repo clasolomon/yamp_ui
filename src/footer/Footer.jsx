@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-bootstrap';
+import './Footer.css';
 
 class Footer extends Component {
     render() {

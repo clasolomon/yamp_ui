@@ -6,7 +6,7 @@ import Moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 
 import ErrorView from './ErrorView';
-import Footer from './Footer';
+import Footer from './footer';
 import Header from './header';
 import Member from './member';
 import Login from './login';
