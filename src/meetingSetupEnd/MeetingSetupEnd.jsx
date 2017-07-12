@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Panel } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 class MeetingSetupEnd extends Component {
     constructor(props){
@@ -20,6 +21,10 @@ class MeetingSetupEnd extends Component {
             </Panel>
         );
     }
+}
+
+MeetingSetupEnd.propTypes = {
+    history: PropTypes.object,
 }
 
 module.exports = MeetingSetupEnd; 

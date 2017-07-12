@@ -14,7 +14,7 @@ import Login from './login';
 import MeetingSetup from './MeetingSetup';
 import Register from './register';
 import Start from './start';
-import MeetingSetupEnd from './MeetingSetupEnd';
+import MeetingSetupEnd from './meetingSetupEnd';
 import axios from './axios-instance';
 
 import './App.css';
