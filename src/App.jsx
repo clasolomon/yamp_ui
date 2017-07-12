@@ -85,7 +85,7 @@ class App extends Component {
                 </Row>
                 <Row>
                     <Col xs={12} sm={12} md={12} lg={12}>
-                        <Route exact path="/" render={(props)=>(<Start {...props} loggedUser={this.state.loggedUser}/>)}/>
+                        <Route exact path="/" render={(props)=>(<Start history={this.props.history} loggedUser={this.state.loggedUser}/>)}/>
                         <Route path="/login" render={(props)=>(<Login {...props} handleError={this.handleError}/>)}/>
                         <Route path="/member" render={(props)=>(<Member {...props} loggedUser={this.state.loggedUser} handleError={this.handleError}/>)}/>
                         <Route path="/register" render={(props)=>(<Register {...props} handleError={this.handleError}/>)}/>

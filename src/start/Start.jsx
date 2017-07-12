@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Panel, FormGroup} from 'react-bootstrap';
+import PropTypes from 'prop-types';
 import './Start.css';
 import axios from 'axios';
 
@@ -18,35 +19,57 @@ class Start extends Component {
         this.props.history.push("/meetingSetup"); 
     }
 
+    renderStartPanel(){
+        if(this.props.loggedUser){
+            return (
+                <MemberStartPanel 
+                    loggedUser={this.props.loggedUser}  
+                    handleManageMeetingsClick={this.handleManageMeetingsClick} 
+                    handlePlanMeetingClick={this.handlePlanMeetingClick}
+                />
+            ); 
+        } else {
+            return (
+                <NonMemberStartPanel 
+                    handlePlanMeetingClick={this.handlePlanMeetingClick}
+                />
+            );
+        }
+    }
+
     render() {
         return (
             <span>
-                { this.props.loggedUser && <MemberStartPanel {...this.props}  handleManageMeetingsClick={this.handleManageMeetingsClick} handlePlanMeetingClick={this.handlePlanMeetingClick}/> }
-                { !this.props.loggedUser && <NonMemberStartPanel handlePlanMeetingClick={this.handlePlanMeetingClick}/> }
+                { this.renderStartPanel() }
             </span>
         );
     }
 }
 
-function MemberStartPanel(props){
+Start.propTypes = {
+    history: PropTypes.object,
+    loggedUser: PropTypes.object,
+}
+
+function MemberStartPanel({loggedUser, handleManageMeetingsClick, handlePlanMeetingClick}){
     return (
         <Panel className="startPanel">
-            <h1>Hello {props.loggedUser.name}!</h1>
+            <h1>Hello {loggedUser.name}!</h1>
             <FormGroup>
-                <Button bsStyle="primary" onClick={props.handleManageMeetingsClick}>Manage your meetings</Button>
+                <Button bsStyle="primary" onClick={handleManageMeetingsClick}>Manage your meetings</Button>
                 {' '}
-                <Button bsStyle="primary" onClick={props.handlePlanMeetingClick}>Plan meeting</Button>
+                <Button bsStyle="primary" onClick={handlePlanMeetingClick}>Plan meeting</Button>
             </FormGroup>
         </Panel>
     );
 }
 
-function NonMemberStartPanel(props){
+function NonMemberStartPanel({handlePlanMeetingClick}){
     return (
         <Panel className="startPanel">
             <h1>Hello!</h1>
             <p>You can plan a meeting as an annonymous user or you can register and you will have access to the history of your meetings.</p>
-            <p><Button bsStyle="primary" onClick={props.handlePlanMeetingClick}>Plan meeting</Button></p>
+            <p><Button bsStyle="primary" onClick={handlePlanMeetingClick}>Plan meeting</Button></p>
         </Panel>
     );
 }
