@@ -112,9 +112,9 @@ class Member extends Component {
 }
 
 Member.propTypes = {
-    history: PropTypes.object,
+    history: PropTypes.object.isRequired,
     loggedUser: PropTypes.object,
-    handleError: PropTypes.func
+    handleError: PropTypes.func.isRequired,
 }
 
 function MeetingStatus({currentMeeting, currentMeetingInvitations, handleDeleteMeetingClick}){

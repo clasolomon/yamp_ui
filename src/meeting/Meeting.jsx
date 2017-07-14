@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button, FormGroup, Checkbox, Panel, Table } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 import axios from '../axios-instance';
 
 class Meeting extends Component {
@@ -104,13 +105,14 @@ class Meeting extends Component {
     }
 
     handleCheckboxChange(event){
+        let newAttendantsAcceptedDatesAndTimes = this.state.attendantsAcceptedDatesAndTimes;
         if(event.target.checked){
-            this.state.attendantsAcceptedDatesAndTimes[this.state.attendantEmail][event.target.name] = this.state.meetingProposedDatesAndTimes[event.target.name];
+            newAttendantsAcceptedDatesAndTimes[this.state.attendantEmail][event.target.name] = this.state.meetingProposedDatesAndTimes[event.target.name];
         } else {
-            this.state.attendantsAcceptedDatesAndTimes[this.state.attendantEmail][event.target.name] = null;
+            newAttendantsAcceptedDatesAndTimes[this.state.attendantEmail][event.target.name] = null;
         }
         this.setState({
-            attendantsAcceptedDatesAndTimes: this.state.attendantsAcceptedDatesAndTimes
+            attendantsAcceptedDatesAndTimes: newAttendantsAcceptedDatesAndTimes,
         });
     }
 
@@ -120,7 +122,7 @@ class Meeting extends Component {
                 <p>Hello <strong>{this.state.attendantEmail}</strong>!</p>
                 <p>You are invited by {this.state.meetingAdmin} to attend the following meeting:</p>
                 <p>Meeting name: {this.state.meetingName}</p>
-                {this.state.meetingDescription ? <p>Meeting description: {this.state.meetingDescription}</p> : null }
+                { this.state.meetingDescription ? <p>Meeting description: {this.state.meetingDescription}</p> : null }
                 <p>Please choose when would you like the meeting to be:</p>
                 <Table responsive>
                     <TableHeader meetingProposedDatesAndTimes={this.state.meetingProposedDatesAndTimes}/>
@@ -132,7 +134,7 @@ class Meeting extends Component {
                         />
                         {
                             Object.keys(this.state.attendantsAcceptedDatesAndTimes)
-                                .filter(email => email != this.state.attendantEmail)
+                                .filter(email => email !== this.state.attendantEmail)
                                 .map(
                                     (email, index) =>
                                     <OtherAttendant 
@@ -151,6 +153,13 @@ class Meeting extends Component {
             </Panel>
         );
     }
+}
+
+Meeting.propTypes = {
+    history: PropTypes.object.isRequired,
+    match: PropTypes.object.isRequired,
+    nonMember: PropTypes.bool.isRequired,
+    handleError: PropTypes.func.isRequired,
 }
 
 function TableHeader({meetingProposedDatesAndTimes}){

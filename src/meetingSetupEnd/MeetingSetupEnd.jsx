@@ -24,7 +24,7 @@ class MeetingSetupEnd extends Component {
 }
 
 MeetingSetupEnd.propTypes = {
-    history: PropTypes.object,
+    history: PropTypes.object.isRequired,
 }
 
 module.exports = MeetingSetupEnd; 

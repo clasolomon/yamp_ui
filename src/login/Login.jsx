@@ -127,10 +127,10 @@ class Login extends Component {
 }
 
 Login.propTypes = {
-    history: PropTypes.object,
-    match: PropTypes.object,
-    location: PropTypes.object,
-    handleError: PropTypes.func
+    history: PropTypes.object.isRequired,
+    match: PropTypes.object.isRequired,
+    location: PropTypes.object.isRequired,
+    handleError: PropTypes.func.isRequired,
 }
 
 function WrongEmailOrPasswordErrorMessage(props){

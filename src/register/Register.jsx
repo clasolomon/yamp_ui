@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Alert, Panel, Button, Image } from 'react-bootstrap';
+import { Panel, Button, Image } from 'react-bootstrap';
 import { Form, FormControl, FormGroup, InputGroup } from 'react-bootstrap';
 import yup from 'yup';
 import ReactTooltip from 'react-tooltip';
@@ -182,10 +182,10 @@ class Register extends Component {
 }
 
 Register.propTypes = {
-    history: PropTypes.object,
     errors: PropTypes.object,
-    validate: PropTypes.func,
-    handleError: PropTypes.func
+    history: PropTypes.object.isRequired,
+    validate: PropTypes.func.isRequired,
+    handleError: PropTypes.func.isRequired,
 }
 
 function RegisterMessage(){
@@ -195,12 +195,12 @@ function RegisterMessage(){
 }
 
 const registerSchemaValidation = {
-    username: yup.string().min(8, 'User name should have minimum ${min} characters!').required('User name is required!'),
+    username: yup.string().min(4, 'User name should have minimum ${min} characters!').required('User name is required!'),// eslint-disable-line no-template-curly-in-string
     email: yup.string().test('email-in-database', 'An account already exists with this email!', 
         async function(email){
             if(email){
                 try{
-                    const res = await axios.get('/users?email=' + email);
+                    await axios.get('/users?email=' + email);
                     return false;
                 }catch(err){
                     console.log('err:', err);
@@ -212,7 +212,7 @@ const registerSchemaValidation = {
             }
         }       
     ).email('Please provide valid email address!').required('Email is required!'),
-    password: yup.string().min(8, 'Password length should be minimum ${min} characters!').required('Password is required!'),
+    password: yup.string().min(4, 'Password length should be minimum ${min} characters!').required('Password is required!'),// eslint-disable-line no-template-curly-in-string
     confirmPassword: yup.string().test('confirmPassword', 'Passwords do not match!', function(value){
         return value === this.parent.password;
     }).required('Password confirm is required!'),

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Button, Panel, FormGroup} from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import './Start.css';
-import axios from 'axios';
 
 class Start extends Component {
     constructor(props){
@@ -47,7 +46,7 @@ class Start extends Component {
 }
 
 Start.propTypes = {
-    history: PropTypes.object,
+    history: PropTypes.object.isRequired,
     loggedUser: PropTypes.object,
 }
 

@@ -114,9 +114,9 @@ class Header extends Component {
 }
 
 Header.propTypes = {
-    history: PropTypes.object,
+    history: PropTypes.object.isRequired,
     loggedUser: PropTypes.object,
-    handleLogout: PropTypes.func
+    handleLogout: PropTypes.func.isRequired,
 }
 
 function LoggedUserDropdownButton({loggedUser, handleLogout}){

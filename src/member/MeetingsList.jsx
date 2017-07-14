@@ -100,8 +100,8 @@ class MeetingsList extends Component {
 
 MeetingsList.propTypes = {
     meetings: PropTypes.array,
-    handlePlanMeetingClick: PropTypes.func,
-    handleMeetingListItemClick: PropTypes.func
+    handlePlanMeetingClick: PropTypes.func.isRequired,
+    handleMeetingListItemClick: PropTypes.func.isRequired,
 }
 
 export default MeetingsList;
