@@ -1,0 +1,12 @@
+.meetingSetup {
+    width: 700px;
+}
+
+.mdt-dateTimePicker {
+    margin-bottom: 10px;
+}
+
+.mdt-dateTimePicker-error {
+    margin-bottom: 10px;
+    border: #a94442 1px solid !important;
+}

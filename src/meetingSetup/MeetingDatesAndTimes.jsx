@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import ReactTooltip from 'react-tooltip';
 import { DateTimePicker } from 'react-widgets';
-import { Alert, Button, Row, Col } from 'react-bootstrap';
+import { Button, Row, Col } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 class MeetingDatesAndTimes extends Component {
     constructor(props){
@@ -35,33 +37,43 @@ class MeetingDatesAndTimes extends Component {
         return datesAndTimes;
     }
 
+    componentDidUpdate(){
+        ReactTooltip.rebuild();
+    }
+
     render(){
         return(
             <Row>
                 <Col xs={12} sm={12} md={12} lg={12}>
                     <h4>Choose possible dates and times for your meeting:</h4>
-                    { this.props.showStartTimeGreaterOrEqualThanEndTimeErrorMessage && <StartTimeGreaterOrEqualThanEndTimeErrorMessage/> }
-                    { this.props.showAtLeastOneDateAndTimeErrorMessage && <AtLeastOneDateAndTimeErrorMessage/>}
+                    <ReactTooltip 
+                        place="right" 
+                        type="error" 
+                        effect="float" 
+                        globalEventOff='click'
+                    />
                     {
                         this.getDatesAndTimes().map((dateObject, index) => {
                             return (<Row key={"r" + index}>
                                 <Col xs={5} sm={5} md={5} lg={5} key={"c1" + index}>
                                     <DateTimePicker 
                                         key={"date" + index} 
-                                        className="mdt-dateTimePicker"
+                                        className={this.props.errors["datesAndTimes[" + index + "].startDate"] ? "mdt-dateTimePicker-error" : "mdt-dateTimePicker"}
                                         placeholder="Start date and time"
                                         min={new Date()}
                                         value={dateObject.startDate} 
+                                        data-tip={this.props.errors["datesAndTimes[" + index + "].startDate"] || ''}
                                         onChange={this.handleChangeStartDate.bind(null, index)}
                                     /> 
                                 </Col>     
                                 <Col xs={5} sm={5} md={5} lg={5} key={"c2" + index}>
                                     <DateTimePicker 
                                         key={"start" + index} 
-                                        className="mdt-dateTimePicker"
+                                        className={this.props.errors["datesAndTimes[" + index + "].endDate"] ? "mdt-dateTimePicker-error" : "mdt-dateTimePicker"}
                                         placeholder="End date and time"
                                         min={new Date()}
                                         value={dateObject.endDate} 
+                                        data-tip={this.props.errors["datesAndTimes[" + index + "].endDate"] || ''}
                                         onChange={this.handleChangeEndDate.bind(null, index)}
                                     />
                                 </Col>     
@@ -83,18 +95,18 @@ class MeetingDatesAndTimes extends Component {
                                 </Col>
                             </Row>);
                         })
-                        }
-                    </Col>
-                </Row>
+                    }
+                </Col>
+            </Row>
         )}
 }
 
-function AtLeastOneDateAndTimeErrorMessage(props){
-    return <Alert bsStyle="danger">Please submit at least one starting and ending date and time for your meeting.</Alert>;
-}
-
-function StartTimeGreaterOrEqualThanEndTimeErrorMessage(props){
-    return <Alert bsStyle="danger">Starting date and time must be earlier than ending date and time.</Alert>;
+MeetingDatesAndTimes.propTypes = {
+    errors: PropTypes.object,
+    datesAndTimes: PropTypes.arrayOf(PropTypes.object).isRequired,
+    addDateAndTime: PropTypes.func.isRequired,
+    deleteDateAndTime: PropTypes.func.isRequired,
+    changeDateAndTime: PropTypes.func.isRequired,
 }
 
 module.exports = MeetingDatesAndTimes;

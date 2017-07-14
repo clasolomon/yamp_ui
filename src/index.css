@@ -11,11 +11,3 @@ body {
     left: 50%;
     transform: translate(-50%, -50%) !important;
 }
-
-.meetingSetup {
-    width: 700px;
-}
-
-.mdt-dateTimePicker {
-    margin-bottom: 10px;
-}

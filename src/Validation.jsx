@@ -9,6 +9,7 @@ function applyValidation(Component, schema){
                 errors: {}
             };
             this.validate = this.validate.bind(this);
+            this.validateWithoutPreservingErrors = this.validateWithoutPreservingErrors.bind(this);
         }
 
         validate(input){
@@ -33,11 +34,31 @@ function applyValidation(Component, schema){
                 });
         }
 
+        validateWithoutPreservingErrors(input){
+            let validationSchema = {};
+            Object.keys(input).forEach((field) => validationSchema[field] = schema[field]);
+
+            return yup.object().shape(validationSchema).validate(input, {abortEarly: false})
+                .then((valid) => {
+                    let newErrors = {};
+                    this.setState({errors: newErrors});
+                })
+                .catch((err) => {
+                    console.log('err:', err);
+                    let newErrors = {};
+                    err.inner.forEach((validationError) => {
+                        newErrors[validationError.path] = validationError.message; 
+                    });
+                    this.setState({errors: newErrors});
+                });
+        }
+
         render(){
             return <Component
                 {...this.props} 
                 errors={this.state.errors}
                 validate={this.validate}
+                validateWithoutPreservingErrors={this.validateWithoutPreservingErrors}
             />;
         }
     };

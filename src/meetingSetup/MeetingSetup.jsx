@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import { Button, Grid, Row, Col } from 'react-bootstrap';
+import PropTypes from 'prop-types';
+import yup from 'yup';
 import MeetingDatesAndTimes from './MeetingDatesAndTimes';
 import MeetingDescription from './MeetingDescription';
 import MeetingInvitations from './MeetingInvitations';
-import axios from './axios-instance';
+import applyValidation from '../Validation';
+import axios from '../axios-instance';
+import './MeetingSetup.css';
 
 /*
  * MeetingSetup component renders three other components corresponding to the phase of the meeting setup process:
@@ -19,18 +23,9 @@ class MeetingSetup extends Component {
             user_email: props.loggedUser ? props.loggedUser.email : '',
             meeting_name: '',
             meeting_description: '',
-            datesAndTimes: [{}, {}, {}], // holds objects describing the dates and times of meetings
-            inviteEmails: ['', '', ''], // holds the emails of the participants
+            datesAndTimes: [{}], // holds objects describing the dates and times of meetings
+            inviteEmails: [''], // holds the emails of the participants
             page: 0, // holds the page index
-            // flags for error messages 
-            showAtLeastOneEmailInvitationErrorMessage: false,
-            showAtLeastOneDateAndTimeErrorMessage: false,
-            showFillInAllRequiredFieldsErrorMessage: false,
-            showStartTimeGreaterOrEqualThanEndTimeErrorMessage: false,
-            errorsOnMeetingDescription: false,
-            errorsOnMeetingInvitations: false
-            // end flags section
-
         };
 
         // bindings
@@ -44,8 +39,6 @@ class MeetingSetup extends Component {
         this.deleteEmailInvitation = this.deleteEmailInvitation.bind(this);
         this.changeEmailInvitation = this.changeEmailInvitation.bind(this);
         this.addEmailInvitation = this.addEmailInvitation.bind(this);
-        this.setErrorsOnMeetingDescription = this.setErrorsOnMeetingDescription.bind(this);
-        this.setErrorsOnMeetingInvitations = this.setErrorsOnMeetingInvitations.bind(this);
         // end of bindings section
     }
 
@@ -68,8 +61,9 @@ class MeetingSetup extends Component {
      * @param {Event} event - event object containing a string representation of an email address
      * */
     changeEmailInvitation(index, event){
-        this.state.inviteEmails[index] = event.target.value;
-        this.setState({inviteEmails: this.state.inviteEmails});
+        let newInviteEmails = this.state.inviteEmails;
+        newInviteEmails[index] = event.target.value;
+        this.setState({inviteEmails: newInviteEmails});
     }
 
     /*
@@ -99,9 +93,13 @@ class MeetingSetup extends Component {
      * Called when the information about the date and time of a meeting is deleted.
      * @param {number} index - the index of the object that was deleted in the datesAndTimes array 
      * */
-    deleteDateAndTime(index){
-        let newDatesAndTimes = this.state.datesAndTimes.filter((element, elementIndex)=>{ return elementIndex !== index; });
+    async deleteDateAndTime(index){
+        let newDatesAndTimes = this.state.datesAndTimes.filter((element, elementIndex) => { return elementIndex !== index; });
         this.setState({datesAndTimes: newDatesAndTimes});
+        // revalidate the dates and times for consistent ReactTooltip error display
+        await this.props.validateWithoutPreservingErrors({
+            datesAndTimes: newDatesAndTimes,
+        });
     }
 
     /*
@@ -116,9 +114,13 @@ class MeetingSetup extends Component {
      * Called when an invitation email is deleted from the email participant list.
      * @param {number} index - the index of the email that was deleted in the inviteEmails array 
      * */
-    deleteEmailInvitation(index){
-        let newInviteEmails = this.state.inviteEmails.filter((element, elementIndex)=>{ return elementIndex !== index; });
+    async deleteEmailInvitation(index){
+        let newInviteEmails = this.state.inviteEmails.filter((element, elementIndex) => { return elementIndex !== index; });
         this.setState({inviteEmails: newInviteEmails});
+        // revalidate the invite emails for consistent ReactTooltip error display
+        await this.props.validateWithoutPreservingErrors({
+            inviteEmails: newInviteEmails,
+        });
     }
 
     /*
@@ -133,51 +135,44 @@ class MeetingSetup extends Component {
      * Handle next button click.
      * @param {Event} event - the triggering event
      * */
-    handleNextClick(event){
+    async handleNextClick(event){
         if(this.state.page === 0){
-            // if at least one required field is empty, show the fill in all required fields error message
-            if(!this.state.meeting_name || !this.state.user_name || !this.state.user_email){
-                this.setState({
-                    showFillInAllRequiredFieldsErrorMessage: {
-                        meeting_name_error: this.state.meeting_name ? false : true,
-                        user_name_error: this.state.user_name ? false : true,
-                        user_email_error: this.state.user_email ? false : true
-                    }
-                });
-                return;
-            } else {
-                this.setState({showFillInAllRequiredFieldsErrorMessage: false});
-            }
+            // validate the input data for page 0
+            await this.props.validateWithoutPreservingErrors({
+                user_name: this.state.user_name,
+                user_email: this.state.user_email,
+                meeting_name: this.state.meeting_name,
+                meeting_description: this.state.meeting_description,
+            });
 
-            // if there are errors do not go to next page
-            if(this.state.errorsOnMeetingDescription){
-                return; 
+            // if there are errors return
+            if(Object.keys(this.props.errors).length > 0){
+                return;
             }
 
             this.setState({
                 page: 1,
             });
+
+            return;
         }
 
         if(this.state.page === 1){
-            // check that at least one date and time is specified
-            let atLeastOneDateAndTime = false;
-            for(let i=0; i < this.state.datesAndTimes.length; i++){
-                if(this.state.datesAndTimes[i].startDate && this.state.datesAndTimes[i].endDate){
-                    atLeastOneDateAndTime = true;
-                    break;
-                }
-            }
+            // validate the input data for page 1
+            await this.props.validateWithoutPreservingErrors({
+                datesAndTimes: this.state.datesAndTimes,
+            });
 
-            this.setState({showAtLeastOneDateAndTimeErrorMessage: !atLeastOneDateAndTime}); 
-
-            if(!atLeastOneDateAndTime || this.state.showStartTimeGreaterOrEqualThanEndTimeErrorMessage){
+            // if there are errors return
+            if(Object.keys(this.props.errors).length > 0){
                 return;
             }
 
             this.setState({
                 page: 2,
             });
+
+            return;
         }
     }
 
@@ -201,26 +196,15 @@ class MeetingSetup extends Component {
      * Handle submit button click.
      * @param {Event} event - the triggering event
      * */
-    handleSubmit(event){
-        // check that at least one email invitation is specified
-        let atLeastOneEmailInvitation = false;
-        for(let i=0; i < this.state.inviteEmails.length; i++){
-            if(this.state.inviteEmails[i]){
-                atLeastOneEmailInvitation = true;
-                break;
-            }
-        }
+    async handleSubmit(event){
+        // validate the input data for page 2
+        await this.props.validateWithoutPreservingErrors({
+            inviteEmails: this.state.inviteEmails,
+        });
 
-        this.setState({showAtLeastOneEmailInvitationErrorMessage: !atLeastOneEmailInvitation}); 
-
-        // if no email invitation is specified return, do not go further
-        if(!atLeastOneEmailInvitation){
+        // if there are errors return
+        if(Object.keys(this.props.errors).length > 0){
             return;
-        }
-
-        // if there are errors do not submit
-        if(this.state.errorsOnMeetingInvitations){
-            return; 
         }
 
         if(this.props.loggedUser){
@@ -231,40 +215,24 @@ class MeetingSetup extends Component {
                 proposedDatesAndTimes: this.state.datesAndTimes.filter((element) => Object.keys(element).length>0)
             };
 
-            axios.post('/meetings', newMeeting)
-                .then(
-                    (response)=>{
-                        this.props.history.replace('/endMeetingSetup');
-                        return response.data.meeting_id;
-                    }
-                )
-                .then(
-                    (meetingId)=>{
-                        let inviteEmails = this.state.inviteEmails.filter((element) => element!=='');
-                        inviteEmails.map(
-                            (email)=>{
-                                let newInvitation = {
-                                    acceptedDatesAndTimes: new Array(newMeeting.proposedDatesAndTimes.length),
-                                    meetingId: meetingId,
-                                    attendantEmail: email
-                                };
-                                axios.post('/invitations', newInvitation)
-                                    .catch(
-                                        (err)=>{
-                                            console.log(err);
-                                            this.props.handleError();
-                                        }
-                                    );
-                            }
-                        );
-                    }
-                )
-                .catch(
-                    (err)=>{
-                        console.log(err);
-                        this.props.handleError();
+            try{
+                const meeting = await axios.post('/meetings', newMeeting);
+                let inviteEmails = this.state.inviteEmails.filter((element) => element!=='');
+                inviteEmails.forEach(
+                    (email)=>{
+                        let newInvitation = {
+                            acceptedDatesAndTimes: new Array(newMeeting.proposedDatesAndTimes.length),
+                            meetingId: meeting.data.meeting_id,
+                            attendantEmail: email
+                        };
+                        axios.post('/invitations', newInvitation);
                     }
                 );
+            }catch(err){
+                console.log(err);
+                this.props.handleError();
+                throw err;
+            }
         }
 
         // if user is NOT logged in
@@ -277,66 +245,39 @@ class MeetingSetup extends Component {
                 proposedDatesAndTimes: this.state.datesAndTimes.filter((element) => Object.keys(element).length>0)
             };
 
-            axios.post('/nonMemberMeetings', newMeeting)
-                .then(
-                    (response)=>{
-                        this.props.history.replace('/endMeetingSetup');
-                        return response.data.meetingId;
-                    }
-                )
-                .then(
-                    (meetingId)=>{
-                        let inviteEmails = this.state.inviteEmails.filter((element) => element!=='');
-                        inviteEmails.map(
-                            (email)=>{
-                                let newInvitation = {
-                                    acceptedDatesAndTimes: JSON.stringify(new Array(newMeeting.proposedDatesAndTimes.length)),
-                                    meetingId: meetingId,
-                                    attendantEmail: email
-                                };
-                                axios.post('/nonMemberInvitations', newInvitation)
-                                    .catch(
-                                        (err)=>{
-                                            console.log(err);
-                                            this.props.handleError();
-                                        }
-                                    );
-                            }
-                        );
-                    }
-                )
-                .catch(
-                    (err)=>{
-                        console.log(err);
-                        this.props.handleError();
+            try{
+                const meeting = await axios.post('/nonMemberMeetings', newMeeting);
+                let inviteEmails = this.state.inviteEmails.filter((element) => element!=='');
+                inviteEmails.forEach(
+                    (email)=>{
+                        let newInvitation = {
+                            acceptedDatesAndTimes: JSON.stringify(new Array(newMeeting.proposedDatesAndTimes.length)),
+                            meetingId: meeting.data.meetingId,
+                            attendantEmail: email
+                        };
+                        axios.post('/nonMemberInvitations', newInvitation);
                     }
                 );
+            }catch(err){
+                console.log(err);
+                this.props.handleError();
+                throw err;
+            }
         }
+
+        // navigate to end meeting setup view
+        this.props.history.replace('/endMeetingSetup');
     }
 
     /*
-     * Set flag if there are errors on meeting description
-     * @param {boolean} - true if error, false otherwise
+     * Render MeetingDescription subcomponent.
      * */
-    setErrorsOnMeetingDescription(hasError){
-        this.setState({errorsOnMeetingDescription: hasError});
-    }
-
-    /*
-     * Set flag if there are errors on meeting invitations
-     * @param {boolean} - true if error, false otherwise
-     * */
-    setErrorsOnMeetingInvitations(hasError){
-        this.setState({errorsOnMeetingInvitations: hasError});
-    }
-
     renderMeetingDescription(){
         if(this.state.page === 0){
             return(
                 <MeetingDescription 
+                    errors={this.props.errors}
                     handleInputChange={this.handleInputChange} 
-                    showFillInAllRequiredFieldsErrorMessage={this.state.showFillInAllRequiredFieldsErrorMessage}
-                    setErrorsOnMeetingDescription={this.setErrorsOnMeetingDescription}
                     meeting_name={this.state.meeting_name} 
                     meeting_description={this.state.meeting_description} 
                     user_name={this.state.user_name} 
@@ -347,12 +288,14 @@ class MeetingSetup extends Component {
         return null;
     }
 
+    /*
+     * Render MeetingDatesAndTimes subcomponent.
+     * */
     renderMeetingDatesAndTimes(){
         if(this.state.page === 1){
             return(
                 <MeetingDatesAndTimes 
-                    showAtLeastOneDateAndTimeErrorMessage={this.state.showAtLeastOneDateAndTimeErrorMessage}
-                    showStartTimeGreaterOrEqualThanEndTimeErrorMessage={this.state.showStartTimeGreaterOrEqualThanEndTimeErrorMessage}
+                    errors={this.props.errors}
                     addDateAndTime={this.addDateAndTime} 
                     deleteDateAndTime={this.deleteDateAndTime} 
                     changeDateAndTime={this.changeDateAndTime} 
@@ -363,12 +306,14 @@ class MeetingSetup extends Component {
         return null;
     }
 
+    /*
+     * Render MeetingInvitations subcomponent.
+     * */
     renderMeetingInvitations(){
         if(this.state.page === 2){
             return(
                 <MeetingInvitations 
-                    showAtLeastOneEmailInvitationErrorMessage={this.state.showAtLeastOneEmailInvitationErrorMessage} 
-                    setErrorsOnMeetingInvitations={this.setErrorsOnMeetingInvitations}
+                    errors={this.props.errors}
                     addEmailInvitation={this.addEmailInvitation} 
                     changeEmailInvitation={this.changeEmailInvitation}
                     deleteEmailInvitation={this.deleteEmailInvitation} 
@@ -379,6 +324,9 @@ class MeetingSetup extends Component {
         return null;
     }
 
+    /*
+     * Render Previous button.
+     * */
     renderPreviousButton(){
         if(this.state.page > 0){
             return(
@@ -395,6 +343,9 @@ class MeetingSetup extends Component {
         return null;
     }
 
+    /*
+     * Render Next button.
+     * */
     renderNextButton(){
         if(this.state.page < 2){
             return(
@@ -411,6 +362,9 @@ class MeetingSetup extends Component {
         return null;
     }
 
+    /*
+     * Render Submit button.
+     * */
     renderSubmitButton(){
         if(this.state.page === 2){
             return(
@@ -428,7 +382,7 @@ class MeetingSetup extends Component {
     }
 
     /*
-     * Render the component.
+     * Render MeetingSetup component.
      * */
     render(){
         return(
@@ -451,4 +405,29 @@ class MeetingSetup extends Component {
     }
 }
 
-module.exports = MeetingSetup;
+MeetingSetup.propTypes = {
+    history: PropTypes.object.isRequired,
+    errors: PropTypes.object.isRequired,
+    loggedUser: PropTypes.object,
+    validate: PropTypes.func.isRequired,
+    validateWithoutPreservingErrors: PropTypes.func.isRequired,
+    handleError: PropTypes.func.isRequired,
+}
+
+/*
+ * Schema validation for MeetingSetup component.
+ * */
+const meetingSetupSchemaValidation = {
+    user_name: yup.string().min(4, 'User name should have minimum ${min} characters!').required('User name is required!'),// eslint-disable-line no-template-curly-in-string
+    user_email: yup.string().email('Please provide valid email address!').required('Email is required!'),
+    meeting_name: yup.string().min(4, 'Meeting name should be minimum ${min} characters!').required('Meeting name is required!'),// eslint-disable-line no-template-curly-in-string
+    meeting_description: yup.string().required('Meeting description is required!'),
+    datesAndTimes: yup.array().of(yup.object({startDate: yup.string().test('startDate before endDate', 'Starting date and time must be before ending date and time!', function(start){
+        return new Date(start) < new Date(this.parent.endDate);
+    }).required('Start date and time is required!'), endDate: yup.string().test('endDate after startDate', 'Ending date and time must be after starting date and time!', function(end){
+        return new Date(end) > new Date(this.parent.startDate);
+    }).required('End date and time is required!')})).required('Please provide at least one starting and ending date and time!'),
+    inviteEmails: yup.array().of(yup.string().email('Please provide valid email address!').required('Email is required!')).required('Please provide at least one email invitation!'),
+};
+
+export default applyValidation(MeetingSetup, meetingSetupSchemaValidation);

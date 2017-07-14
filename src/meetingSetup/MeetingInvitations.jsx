@@ -1,23 +1,12 @@
 import React, { Component } from 'react';
-import { Alert, Button, Col, Row } from 'react-bootstrap';
-import { Form, FormControl, FormGroup, InputGroup } from 'react-bootstrap';
+import { Button, Col, Row } from 'react-bootstrap';
+import { FormControl, FormGroup, InputGroup } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 import ReactTooltip from 'react-tooltip';
-import applyValidation from './Validation';
 
 class MeetingInvitations extends Component {
-    constructor(props){
-        super(props);
-        this.performValidation = this.performValidation.bind(this);
-    }
-
-    performValidation(schemaName, event){
-        return this.props.validate(schemaName, event).then(()=>{
-            if(Object.keys(this.props.errors).length > 0){
-                this.props.setErrorsOnMeetingInvitations(true);
-            } else {
-                this.props.setErrorsOnMeetingInvitations(false);
-            }
-        });
+    componentDidUpdate(){
+        ReactTooltip.rebuild();
     }
 
     render(){
@@ -25,14 +14,17 @@ class MeetingInvitations extends Component {
             <Row>
                 <Col xs={12} sm={12} md={12} lg={12}>
                     <h4>Meeting invitations</h4>
-                    { this.props.showAtLeastOneEmailInvitationErrorMessage && <AtLeastOneEmailInvitationErrorMessage/>}
-                    <ReactTooltip place="right" type="error" effect="float" globalEventOff='click'/>
-                    {console.log("MeetingInvitations:", this.props.inviteEmails)}
+                    <ReactTooltip 
+                        place="right" 
+                        type="error" 
+                        effect="float" 
+                        globalEventOff='click'
+                    />
                     {
-                        this.props.inviteEmails.map((element, index)=>
+                        this.props.inviteEmails.map((element, index) =>
                             <Row key={"mir" + index}>
                                 <Col xs={10} sm={10} md={10} lg={10} key={"mic1" + index}>
-                                    <FormGroup key={"mifg" + index} validationState={!this.props.errors["mifc" + index] ? null : "error"}>
+                                    <FormGroup key={"mifg" + index} validationState={!this.props.errors["inviteEmails[" + index + "]"] ? null : "error"}>
                                         <InputGroup>
                                             <InputGroup.Addon>
                                                 <i className="fa fa-envelope-o" aria-hidden="true"></i>
@@ -42,10 +34,8 @@ class MeetingInvitations extends Component {
                                                 type="text" 
                                                 name={"mifc" + index}
                                                 value={element} 
-                                                data-tip={this.props.errors["mifc" + index] || ''}
-                                                onBlur={this.performValidation.bind(null, "valid_email")} 
+                                                data-tip={this.props.errors["inviteEmails[" + index + "]"] || ''}
                                                 onChange={this.props.changeEmailInvitation.bind(null, index)}/>
-                                            <FormControl.Feedback />
                                         </InputGroup>
                                     </FormGroup>
                                 </Col>
@@ -66,15 +56,19 @@ class MeetingInvitations extends Component {
                                     >Add</Button>:null} 
                                 </Col>
                             </Row>
-                            )}
-                        </Col>
-                    </Row>
+                        )}
+                    </Col>
+                </Row>
         );
     }
 }
 
-function AtLeastOneEmailInvitationErrorMessage(props){
-    return <Alert bsStyle="danger">Please submit at least one email invitation</Alert>;
+MeetingInvitations.propTypes = {
+    errors: PropTypes.object,
+    inviteEmails: PropTypes.arrayOf(PropTypes.string).isRequired,
+    addEmailInvitation: PropTypes.func.isRequired,
+    deleteEmailInvitation: PropTypes.func.isRequired,
+    changeEmailInvitation: PropTypes.func.isRequired,
 }
 
-module.exports = applyValidation(MeetingInvitations); 
+module.exports = MeetingInvitations; 
