@@ -20,7 +20,7 @@ class ErrorView extends Component {
                     </Modal.Header>
 
                     <Modal.Body>
-                        An unexpected error occured.
+                        An unexpected error occurred.
                     </Modal.Body>
 
                     <Modal.Footer>
