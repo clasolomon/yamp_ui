@@ -20,12 +20,12 @@ class Login extends Component {
     }
 
     handleInputChange(event){
-        const name = event.target.name;
-        const value = event.target.value;
+        const {name, value} = event.target;
 
-        this.setState({
-            [name]: value
-        });
+        let newState = this.state;
+        newState[name] = value;
+
+        this.setState(newState);
     }
 
     handleLoginClick(event){
