@@ -122,9 +122,7 @@ Header.propTypes = {
 function LoggedUserDropdownButton({loggedUser, handleLogout}){
     return  (
         <DropdownButton bsStyle="primary" title={loggedUser.name} id="dropdown-size-medium">
-            <MenuItem eventKey="1">Settings</MenuItem>
-            <MenuItem divider />
-            <MenuItem eventKey="2" onClick={handleLogout}>Logout</MenuItem>
+            <MenuItem eventKey="1" onClick={handleLogout}>Logout</MenuItem>
         </DropdownButton>
     );
 }
