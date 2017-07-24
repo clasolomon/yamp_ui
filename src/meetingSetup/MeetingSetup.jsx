@@ -76,17 +76,9 @@ class MeetingSetup extends Component {
         let tempDatesAndTimes = this.state.datesAndTimes;
         if(startDate) tempDatesAndTimes[index].startDate = startDate;
         if(endDate) tempDatesAndTimes[index].endDate = endDate;
-        if(tempDatesAndTimes[index].startDate && tempDatesAndTimes[index].endDate && tempDatesAndTimes[index].startDate >= tempDatesAndTimes[index].endDate){
-            this.setState({
-                datesAndTimes: tempDatesAndTimes,
-                showStartTimeGreaterOrEqualThanEndTimeErrorMessage: true
-            });
-        } else {
-            this.setState({
-                datesAndTimes: tempDatesAndTimes,
-                showStartTimeGreaterOrEqualThanEndTimeErrorMessage: false
-            });
-        }
+        this.setState({
+            datesAndTimes: tempDatesAndTimes,
+        });
     }
 
     /*
