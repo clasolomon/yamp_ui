@@ -28,7 +28,7 @@ class Meeting extends Component {
         if(!this.props.nonMember){
             try{
                 const invitation = await axios.get('/invitations/' + this.props.match.params.invitation_id);
-                const invitationsByMeetingId = await axios.get('/invitations?meeting_id=' + invitation.data.meeting_id);
+                const invitationsByMeetingId = await axios.get('/invitations?meetingId=' + invitation.data.meeting_id);
                 const meeting = await axios.get('/meetings/' + invitation.data.meeting_id);
                 const user = await axios.get('/users/' + meeting.data.initiated_by);
 
